@@ -1,0 +1,227 @@
+openapi: 3.0.3
+info:
+  title: Linemate — Event Booking System API
+  version: 1.0.0
+  description: >
+    REST API for browsing events and reserving seats. Authentication uses a JWT
+    stored in an httpOnly cookie; send credentials with each request.
+servers:
+  - url: http://localhost:4000/api
+    description: Local development
+tags:
+  - name: Auth
+  - name: Events
+  - name: Bookings
+  - name: System
+
+paths:
+  /health:
+    get:
+      tags: [System]
+      summary: Liveness probe
+      responses:
+        '200':
+          description: Service is healthy
+
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: Register a new user (sets the auth cookie)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password]
+              properties:
+                name: { type: string, minLength: 2, maxLength: 80, example: Ada Lovelace }
+                email: { type: string, format: email, example: ada@example.com }
+                password: { type: string, minLength: 8, example: password123 }
+      responses:
+        '201': { description: Created, content: { application/json: { schema: { $ref: '#/components/schemas/UserResponse' } } } }
+        '409': { description: Email already in use, content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+        '422': { description: Validation error, content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Log in (sets the auth cookie)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email, example: demo@linemate.events }
+                password: { type: string, example: password123 }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/UserResponse' } } } }
+        '401': { description: Invalid credentials, content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: Log out (clears the auth cookie)
+      responses:
+        '200': { description: OK }
+
+  /auth/me:
+    get:
+      tags: [Auth]
+      summary: Get the currently authenticated user
+      security: [{ cookieAuth: [] }]
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/UserResponse' } } } }
+        '401': { description: Not authenticated }
+
+  /events:
+    get:
+      tags: [Events]
+      summary: List events
+      parameters:
+        - { name: search, in: query, schema: { type: string } }
+        - { name: category, in: query, schema: { type: string, enum: [Music, Technology, Arts, Business, Sports, 'Food & Drink', Community, Theatre, Wellness] } }
+        - { name: city, in: query, schema: { type: string } }
+        - { name: when, in: query, schema: { type: string, enum: [upcoming, past, all], default: upcoming } }
+        - { name: sort, in: query, schema: { type: string, enum: [date, -date, seats, -seats, newest], default: date } }
+        - { name: page, in: query, schema: { type: integer, minimum: 1, default: 1 } }
+        - { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 50, default: 12 } }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: array, items: { $ref: '#/components/schemas/Event' } }
+                  pagination: { $ref: '#/components/schemas/Pagination' }
+
+  /events/{id}:
+    get:
+      tags: [Events]
+      summary: Get a single event
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string }, description: 24-char hex ObjectId }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { type: object, properties: { data: { $ref: '#/components/schemas/Event' } } } } } }
+        '404': { description: Not found }
+        '422': { description: Malformed id }
+
+  /bookings:
+    get:
+      tags: [Bookings]
+      summary: List the current user's bookings
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - { name: status, in: query, schema: { type: string, enum: [CONFIRMED, CANCELLED, all], default: all } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/Booking' } } } } } } }
+        '401': { description: Not authenticated }
+    post:
+      tags: [Bookings]
+      summary: Create a booking (reserve seats)
+      security: [{ cookieAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [eventId, seats]
+              properties:
+                eventId: { type: string, description: 24-char hex ObjectId }
+                seats: { type: integer, minimum: 1, maximum: 10, example: 2 }
+      responses:
+        '201': { description: Created, content: { application/json: { schema: { type: object, properties: { data: { $ref: '#/components/schemas/Booking' } } } } } }
+        '400': { description: Event already took place }
+        '401': { description: Not authenticated }
+        '404': { description: Event not found }
+        '409': { description: Not enough seats available }
+        '422': { description: Validation error }
+
+  /bookings/{id}/cancel:
+    patch:
+      tags: [Bookings]
+      summary: Cancel a booking (releases seats back to inventory)
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Cancelled, content: { application/json: { schema: { type: object, properties: { data: { $ref: '#/components/schemas/Booking' } } } } } }
+        '400': { description: Already cancelled }
+        '401': { description: Not authenticated }
+        '403': { description: Not your booking }
+        '404': { description: Booking not found }
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: ebs_token
+  schemas:
+    User:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        email: { type: string, format: email }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    UserResponse:
+      type: object
+      properties:
+        data: { $ref: '#/components/schemas/User' }
+    Event:
+      type: object
+      properties:
+        id: { type: string }
+        title: { type: string }
+        description: { type: string }
+        date: { type: string, format: date-time }
+        venue: { type: string }
+        city: { type: string }
+        category: { type: string }
+        organizer: { type: string }
+        totalSeats: { type: integer }
+        availableSeats: { type: integer }
+        isPast: { type: boolean }
+        isSoldOut: { type: boolean }
+        status: { type: string, enum: [available, sold_out, past] }
+    Booking:
+      type: object
+      properties:
+        id: { type: string }
+        user: { type: string }
+        event: { $ref: '#/components/schemas/Event' }
+        seats: { type: integer }
+        status: { type: string, enum: [CONFIRMED, CANCELLED] }
+        bookingCode: { type: string, example: LM-7Q4K9P }
+        cancelledAt: { type: string, format: date-time, nullable: true }
+        createdAt: { type: string, format: date-time }
+    Pagination:
+      type: object
+      properties:
+        page: { type: integer }
+        limit: { type: integer }
+        total: { type: integer }
+        totalPages: { type: integer }
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            message: { type: string }
+            code: { type: string }
+            details:
+              type: array
+              items:
+                type: object
+                properties:
+                  field: { type: string }
+                  message: { type: string }

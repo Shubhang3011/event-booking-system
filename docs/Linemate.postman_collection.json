@@ -1,0 +1,92 @@
+{
+  "info": {
+    "name": "Linemate — Event Booking System",
+    "description": "REST API for the Linemate event booking system. Auth uses an httpOnly cookie, so run Register or Login first and Postman will keep the cookie for later requests. Set the {{baseUrl}} variable to your API origin.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:4000/api" },
+    { "key": "eventId", "value": "" },
+    { "key": "bookingId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ada Lovelace\",\n  \"email\": \"ada@example.com\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login (demo account)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"demo@linemate.events\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        },
+        { "name": "Me", "request": { "method": "GET", "url": "{{baseUrl}}/auth/me" } },
+        { "name": "Logout", "request": { "method": "POST", "url": "{{baseUrl}}/auth/logout" } }
+      ]
+    },
+    {
+      "name": "Events",
+      "item": [
+        {
+          "name": "List events",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/events?when=upcoming&sort=date&page=1&limit=12",
+              "host": ["{{baseUrl}}"],
+              "path": ["events"],
+              "query": [
+                { "key": "when", "value": "upcoming" },
+                { "key": "sort", "value": "date" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "12" },
+                { "key": "search", "value": "", "disabled": true },
+                { "key": "category", "value": "Music", "disabled": true }
+              ]
+            }
+          }
+        },
+        { "name": "Get event by id", "request": { "method": "GET", "url": "{{baseUrl}}/events/{{eventId}}" } }
+      ]
+    },
+    {
+      "name": "Bookings",
+      "item": [
+        {
+          "name": "Create booking",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/bookings",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"eventId\": \"{{eventId}}\",\n  \"seats\": 2\n}"
+            }
+          }
+        },
+        { "name": "My bookings", "request": { "method": "GET", "url": "{{baseUrl}}/bookings" } },
+        {
+          "name": "Cancel booking",
+          "request": { "method": "PATCH", "url": "{{baseUrl}}/bookings/{{bookingId}}/cancel" }
+        }
+      ]
+    }
+  ]
+}

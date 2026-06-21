@@ -1,0 +1,24 @@
+# Render.com blueprint — ONE service that serves the API + the website.
+# Steps: push to GitHub → render.com → New → Blueprint → pick this repo →
+# set MONGO_URI (your MongoDB Atlas connection string) → Apply.
+#
+# (An alternative two-service setup is available in docs; this single service is
+# the simplest to operate.)
+services:
+  - type: web
+    name: linemate-app
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true # Render generates a strong secret automatically
+      - key: MONGO_URI
+        sync: false # set this in the dashboard to your Atlas connection string
+      - key: COOKIE_SECURE
+        value: 'true'
+      - key: COOKIE_SAMESITE
+        value: lax

@@ -1,0 +1,44 @@
+# One-command full stack: MongoDB + API + static frontend (behind nginx).
+#
+#   docker compose up --build
+#   → open http://localhost:8080
+#
+# No Node, npm or MongoDB install required on the host.
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+
+  server:
+    build:
+      context: ./server
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: '4000'
+      MONGO_URI: mongodb://mongo:27017/event-booking
+      # Override in a real deployment. Must be a strong, unique value (>= 32 chars).
+      JWT_SECRET: ${JWT_SECRET:-change-me-0123456789abcdef0123456789abcdef0123456789}
+      # Browser talks to the web container (same-origin), which proxies /api here.
+      CLIENT_ORIGIN: http://localhost:8080
+      # Same-origin over http in this demo, so disable Secure / use Lax.
+      COOKIE_SECURE: 'false'
+      COOKIE_SAMESITE: lax
+    depends_on:
+      - mongo
+
+  web:
+    build:
+      context: ./web
+      args:
+        VITE_API_URL: /api
+    restart: unless-stopped
+    ports:
+      - '8080:80'
+    depends_on:
+      - server
+
+volumes:
+  mongo-data:
