@@ -3,6 +3,7 @@ import { env } from '../config/env';
 import { logger } from '../lib/logger';
 import { Booking } from '../modules/bookings/booking.model';
 import { Event, type EventCategory } from '../modules/events/event.model';
+import { Review } from '../modules/reviews/review.model';
 import { User } from '../modules/users/user.model';
 import { connectDatabase, disconnectDatabase } from './connect';
 
@@ -192,8 +193,30 @@ const events: EventSeed[] = [
   },
 ];
 
+// Sample reviewers so events show real ratings out of the box.
+const REVIEWERS = [
+  { name: 'Aarav Sharma', email: 'aarav@linemate.events' },
+  { name: 'Priya Nair', email: 'priya@linemate.events' },
+  { name: 'Rahul Verma', email: 'rahul@linemate.events' },
+  { name: 'Sara Khan', email: 'sara@linemate.events' },
+];
+
+// Reviews keyed by index into the `events` array above.
+const reviewSeeds: { e: number; r: number; rating: number; comment: string }[] = [
+  { e: 0, r: 0, rating: 5, comment: 'The trio was on fire — best jazz night in ages.' },
+  { e: 0, r: 1, rating: 4, comment: 'Lovely intimate room. Get there early for a good spot.' },
+  { e: 2, r: 2, rating: 5, comment: 'The sound system was unreal. Danced till the lights came up.' },
+  { e: 2, r: 3, rating: 4, comment: 'Great night — just wish it ran a little longer.' },
+  { e: 3, r: 1, rating: 4, comment: 'Genuinely funny sets in the finals. Worth the trip.' },
+  { e: 5, r: 0, rating: 5, comment: 'The coastal menu was a highlight of my whole year.' },
+  { e: 6, r: 2, rating: 4, comment: 'Bold staging — the in-the-round format really works.' },
+  { e: 8, r: 3, rating: 5, comment: 'Beautiful show. The curators were generous with their time.' },
+  { e: 10, r: 0, rating: 5, comment: 'Best React lineup yet. The hallway track was gold.' },
+  { e: 10, r: 2, rating: 4, comment: 'Strong talks; lunch queue could be smoother.' },
+];
+
 interface SeedOptions {
-  /** Wipe events + bookings before inserting (used by `npm run seed`). */
+  /** Wipe events + bookings + reviews before inserting (used by `npm run seed`). */
   reset?: boolean;
   /** Suppress info logging (used during server startup). */
   quiet?: boolean;
@@ -201,21 +224,40 @@ interface SeedOptions {
 
 export async function seedDatabase({ reset = false, quiet = false }: SeedOptions = {}): Promise<void> {
   if (reset) {
-    await Promise.all([Event.deleteMany({}), Booking.deleteMany({})]);
+    await Promise.all([Event.deleteMany({}), Booking.deleteMany({}), Review.deleteMany({})]);
   }
 
+  let created: Awaited<ReturnType<typeof Event.insertMany>> = [];
   const existingCount = await Event.estimatedDocumentCount();
   if (existingCount === 0) {
-    await Event.insertMany(events);
+    created = await Event.insertMany(events);
   } else if (!reset) {
     if (!quiet) logger.info('Events already present — skipping event seed.');
   }
 
   // Upsert the demo user (idempotent).
-  const existingUser = await User.findOne({ email: DEMO_USER.email }).lean();
-  if (!existingUser) {
-    const passwordHash = await bcrypt.hash(DEMO_USER.password, env.BCRYPT_ROUNDS);
+  const passwordHash = await bcrypt.hash(DEMO_USER.password, env.BCRYPT_ROUNDS);
+  if (!(await User.findOne({ email: DEMO_USER.email }).lean())) {
     await User.create({ name: DEMO_USER.name, email: DEMO_USER.email, passwordHash });
+  }
+
+  // Seed sample reviews on a fresh database.
+  if (created.length && (await Review.estimatedDocumentCount()) === 0) {
+    const reviewers = await Promise.all(
+      REVIEWERS.map(async (r) => {
+        const found = await User.findOne({ email: r.email });
+        return found ?? (await User.create({ name: r.name, email: r.email, passwordHash }));
+      }),
+    );
+    const docs = reviewSeeds
+      .filter((s) => created[s.e] && reviewers[s.r])
+      .map((s) => ({
+        event: created[s.e]!._id,
+        user: reviewers[s.r]!._id,
+        rating: s.rating,
+        comment: s.comment,
+      }));
+    if (docs.length) await Review.insertMany(docs);
   }
 
   if (!quiet) {
