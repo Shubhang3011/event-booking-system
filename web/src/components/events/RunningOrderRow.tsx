@@ -2,7 +2,7 @@ import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/cn';
 import { accentVars, eventAccent } from '@/lib/eventAccent';
-import { dateline, time } from '@/lib/format';
+import { dateline, shortDate, time } from '@/lib/format';
 import type { EventItem } from '@/lib/types';
 import { EventStatusBadge } from './EventStatusBadge';
 
@@ -18,14 +18,17 @@ export function RunningOrderRow({ event, index }: { event: EventItem; index: num
       <Link
         to={`/events/${event.id}`}
         className={cn(
-          'grid grid-cols-[2.25rem_1fr_auto] items-center gap-4 py-5 md:grid-cols-[3rem_5rem_1fr_12rem_auto]',
+          'grid grid-cols-[2.25rem_1fr_auto] items-center gap-4 py-5 md:grid-cols-[3rem_7rem_1fr_11rem_auto]',
           dimmed && 'opacity-70',
         )}
       >
         <span className="font-mono text-[13px] tabular-nums text-ink-3 transition-colors group-hover:text-[color:var(--ev-accent)]">
           {String(index + 1).padStart(2, '0')}
         </span>
-        <span className="hidden font-mono text-[13px] tabular-nums text-ink-2 md:block">{time(event.date)}</span>
+        <span className="hidden flex-col leading-tight md:flex">
+          <span className="font-mono text-[12px] uppercase tracking-[0.03em] text-ink-2">{shortDate(event.date)}</span>
+          <span className="font-mono text-[12px] tabular-nums text-ink-3">{time(event.date)}</span>
+        </span>
         <span className="min-w-0">
           <span className="block truncate font-display text-[1.4rem] font-medium leading-tight text-ink transition-transform duration-150 group-hover:translate-x-1">
             {event.title}

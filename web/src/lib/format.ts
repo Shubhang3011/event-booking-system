@@ -27,6 +27,11 @@ export function time(value: string | Date): string {
   return format(d(value), 'HH:mm');
 }
 
+/** "Wed 25 Jun" — compact date for dense list rows. */
+export function shortDate(value: string | Date): string {
+  return format(d(value), 'EEE d MMM');
+}
+
 /** "in 3 days" / "2 months ago" */
 export function relativeTime(value: string | Date): string {
   const date = d(value);
