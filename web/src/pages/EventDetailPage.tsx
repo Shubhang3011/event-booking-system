@@ -1,6 +1,6 @@
 import { ArrowLeft, CalendarPlus, Share2 } from 'lucide-react';
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '@/auth/AuthContext';
 import { BookingDialog } from '@/components/bookings/BookingDialog';
 import { EventCover } from '@/components/events/EventCover';
@@ -11,11 +11,14 @@ import { ReviewsSection } from '@/components/reviews/ReviewsSection';
 import { Container } from '@/components/layout/Container';
 import { Button } from '@/components/ui/Button';
 import { SeatStepper } from '@/components/ui/SeatStepper';
+import { Modal } from '@/components/ui/Modal';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { StarRating } from '@/components/ui/StarRating';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { useDeleteEvent } from '@/hooks/useEventMutations';
 import { useEvent, useEvents } from '@/hooks/useEvents';
 import { useReviews } from '@/hooks/useReviews';
+import { toApiError } from '@/lib/api';
 import { accentVars, eventAccent } from '@/lib/eventAccent';
 import { downloadIcs, shareEvent } from '@/lib/eventActions';
 import { longDate, padCount, time } from '@/lib/format';
@@ -43,14 +46,28 @@ export function EventDetailPage() {
 
 function EventDetail({ event }: { event: EventItem }) {
   useDocumentTitle(event.title);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const toast = useToast();
+  const navigate = useNavigate();
+  const del = useDeleteEvent();
   const accent = eventAccent(event.id);
   const max = Math.min(10, event.availableSeats);
   const [seats, setSeats] = useState(1);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   const bookable = !event.isPast && !event.isSoldOut;
+  const isOwner = Boolean(event.createdBy && event.createdBy === user?.id);
+
+  const confirmDelete = async () => {
+    try {
+      await del.mutateAsync(event.id);
+      toast.success('Event deleted');
+      navigate('/events');
+    } catch (err) {
+      toast.error(toApiError(err).message);
+    }
+  };
   const booked = event.totalSeats - event.availableSeats;
   const pctBooked = event.totalSeats ? Math.round((booked / event.totalSeats) * 100) : 0;
 
@@ -108,6 +125,21 @@ function EventDetail({ event }: { event: EventItem }) {
               <span className="link-underline">Add to calendar</span>
             </button>
           </div>
+
+          {isOwner ? (
+            <div className="mt-5 flex flex-wrap items-center gap-3 rounded-md border border-line bg-paper-3/50 px-4 py-3">
+              <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-ink-3">You're the organizer</span>
+              <span className="flex-1" />
+              <Link to={`/events/${event.id}/edit`}>
+                <Button variant="secondary" size="sm">
+                  Edit
+                </Button>
+              </Link>
+              <Button variant="danger" size="sm" onClick={() => setDeleteOpen(true)}>
+                Delete
+              </Button>
+            </div>
+          ) : null}
 
           <dl className="mt-6 max-w-md">
             <Fact label="Date" value={longDate(event.date)} />
@@ -224,6 +256,26 @@ function EventDetail({ event }: { event: EventItem }) {
       {bookable ? (
         <BookingDialog open={dialogOpen} onClose={() => setDialogOpen(false)} event={event} seats={seats} />
       ) : null}
+
+      <Modal
+        open={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        title="Delete this event?"
+        footer={
+          <>
+            <Button variant="ghost" onClick={() => setDeleteOpen(false)}>
+              Keep
+            </Button>
+            <Button variant="danger" isLoading={del.isPending} onClick={confirmDelete}>
+              Delete event
+            </Button>
+          </>
+        }
+      >
+        <p className="text-[15px] text-ink-2">
+          This permanently removes “{event.title}”, along with its bookings and reviews. This cannot be undone.
+        </p>
+      </Modal>
     </Container>
   );
 }

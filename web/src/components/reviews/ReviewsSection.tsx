@@ -11,7 +11,7 @@ import { toApiError } from '@/lib/api';
 import { cn } from '@/lib/cn';
 import { useToast } from '@/providers/ToastProvider';
 
-const VISIBLE_REVIEWS = 3;
+const VISIBLE_REVIEWS = 4;
 
 function initials(name: string): string {
   return name
@@ -34,7 +34,6 @@ export function ReviewsSection({ eventId }: { eventId: string }) {
   const [comment, setComment] = useState('');
   const [showAll, setShowAll] = useState(false);
 
-  // Prefill the form with the user's existing review.
   useEffect(() => {
     if (myReview) {
       setRating(myReview.rating);
@@ -66,6 +65,10 @@ export function ReviewsSection({ eventId }: { eventId: string }) {
       toast.error(toApiError(err).message);
     }
   };
+
+  const reviews = data?.reviews ?? [];
+  const visible = showAll ? reviews : reviews.slice(0, VISIBLE_REVIEWS);
+  const hasMore = reviews.length > VISIBLE_REVIEWS;
 
   return (
     <section className="mt-16">
@@ -117,43 +120,60 @@ export function ReviewsSection({ eventId }: { eventId: string }) {
         </p>
       )}
 
-      <div className="mt-8 space-y-6">
-        {isLoading ? (
-          <p className="text-ink-3">Loading reviews…</p>
-        ) : !data || data.reviews.length === 0 ? (
-          <p className="text-[15px] text-ink-3">No reviews yet — be the first.</p>
-        ) : (
-          (showAll ? data.reviews : data.reviews.slice(0, VISIBLE_REVIEWS)).map((r) => (
-            <div key={r.id} className="border-b border-line pb-6 last:border-b-0">
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <span className="grid h-8 w-8 place-items-center rounded-full bg-ink text-[11px] font-semibold text-paper-2">
-                    {initials(r.user)}
-                  </span>
-                  <div>
-                    <p className="text-[14px] font-semibold text-ink">{r.user}</p>
-                    <p className="font-mono text-[11px] text-ink-3">{format(new Date(r.createdAt), 'd MMM yyyy')}</p>
+      {isLoading ? (
+        <p className="mt-8 text-ink-3">Loading reviews…</p>
+      ) : reviews.length === 0 ? (
+        <p className="mt-8 text-[15px] text-ink-3">No reviews yet — be the first.</p>
+      ) : (
+        <>
+          <div className="relative">
+            <div className="mt-8 space-y-6">
+              {visible.map((r, i) => (
+                <div
+                  key={r.id}
+                  className={cn(
+                    'border-b border-line pb-6 last:border-b-0',
+                    showAll && i >= VISIBLE_REVIEWS && 'animate-rise-in',
+                  )}
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <span className="grid h-8 w-8 place-items-center rounded-full bg-ink text-[11px] font-semibold text-paper-2">
+                        {initials(r.user)}
+                      </span>
+                      <div>
+                        <p className="text-[14px] font-semibold text-ink">{r.user}</p>
+                        <p className="font-mono text-[11px] text-ink-3">{format(new Date(r.createdAt), 'd MMM yyyy')}</p>
+                      </div>
+                    </div>
+                    <StarRating value={r.rating} size={15} />
                   </div>
+                  {r.comment ? <p className="mt-3 text-[15px] leading-relaxed text-ink-2">{r.comment}</p> : null}
                 </div>
-                <StarRating value={r.rating} size={15} />
-              </div>
-              {r.comment ? <p className="mt-3 text-[15px] leading-relaxed text-ink-2">{r.comment}</p> : null}
+              ))}
             </div>
-          ))
-        )}
-      </div>
+            {/* Fade the last visible review into the page when collapsed. */}
+            {!showAll && hasMore ? (
+              <div
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-paper to-transparent"
+                aria-hidden
+              />
+            ) : null}
+          </div>
 
-      {data && data.reviews.length > VISIBLE_REVIEWS ? (
-        <button
-          type="button"
-          onClick={() => setShowAll((s) => !s)}
-          className="mt-6 inline-flex items-center gap-1.5 font-mono text-[12px] uppercase tracking-[0.08em] text-ink-2 transition-colors hover:text-ink"
-          aria-expanded={showAll}
-        >
-          {showAll ? 'Show fewer' : `Show all ${data.reviews.length} reviews`}
-          <ChevronDown className={cn('h-4 w-4 transition-transform', showAll && 'rotate-180')} strokeWidth={1.75} />
-        </button>
-      ) : null}
+          {hasMore ? (
+            <button
+              type="button"
+              onClick={() => setShowAll((s) => !s)}
+              aria-expanded={showAll}
+              className="mt-5 inline-flex items-center gap-1.5 font-mono text-[12px] uppercase tracking-[0.08em] text-ink-2 transition-colors hover:text-ink"
+            >
+              {showAll ? 'Show fewer' : `Show all ${reviews.length} reviews`}
+              <ChevronDown className={cn('h-4 w-4 transition-transform', showAll && 'rotate-180')} strokeWidth={1.75} />
+            </button>
+          ) : null}
+        </>
+      )}
     </section>
   );
 }

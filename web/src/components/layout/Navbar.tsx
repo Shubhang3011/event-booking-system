@@ -1,4 +1,4 @@
-import { Bookmark, LogOut, Settings, Ticket, type LucideIcon } from 'lucide-react';
+import { Bookmark, CalendarDays, LogOut, Plus, Settings, Ticket, type LucideIcon } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/auth/AuthContext';
@@ -122,6 +122,12 @@ function UserMenu() {
             </MenuLink>
             <MenuLink to="/saved" icon={Bookmark} onClick={() => setOpen(false)}>
               Saved events
+            </MenuLink>
+            <MenuLink to="/events/new" icon={Plus} onClick={() => setOpen(false)}>
+              Create event
+            </MenuLink>
+            <MenuLink to="/events/mine" icon={CalendarDays} onClick={() => setOpen(false)}>
+              My events
             </MenuLink>
             <MenuLink to="/settings" icon={Settings} onClick={() => setOpen(false)}>
               Settings

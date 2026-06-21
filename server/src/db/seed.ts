@@ -269,6 +269,16 @@ export async function seedDatabase({ reset = false, quiet = false }: SeedOptions
         comment: s.comment,
       }));
     if (docs.length) await Review.insertMany(docs);
+
+    // Denormalize ratings onto the events.
+    const ratings = await Review.aggregate<{ _id: unknown; avg: number; count: number }>([
+      { $group: { _id: '$event', avg: { $avg: '$rating' }, count: { $sum: 1 } } },
+    ]);
+    await Promise.all(
+      ratings.map((g) =>
+        Event.updateOne({ _id: g._id }, { ratingAverage: Math.round(g.avg * 10) / 10, ratingCount: g.count }),
+      ),
+    );
   }
 
   if (!quiet) {

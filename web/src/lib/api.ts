@@ -69,9 +69,20 @@ export interface ListEventsParams {
   category?: EventCategory;
   city?: string;
   when?: 'upcoming' | 'past' | 'all';
-  sort?: 'date' | '-date' | 'seats' | '-seats' | 'newest';
+  sort?: 'date' | '-date' | 'seats' | '-seats' | 'newest' | '-rating';
   page?: number;
   limit?: number;
+}
+
+export interface EventInput {
+  title: string;
+  description: string;
+  date: string;
+  venue: string;
+  city: string;
+  category: EventCategory;
+  organizer: string;
+  totalSeats: number;
 }
 
 export const eventsApi = {
@@ -86,6 +97,12 @@ export const eventsApi = {
   upsertReview: (id: string, body: { rating: number; comment: string }) =>
     api.post(`/events/${id}/reviews`, body).then(() => undefined),
   deleteReview: (id: string) => api.delete(`/events/${id}/reviews`).then(() => undefined),
+  // Organizer CRUD
+  listMine: () => api.get('/events/mine').then((r) => r.data.data as EventItem[]),
+  create: (body: EventInput) => api.post('/events', body).then((r) => r.data.data as EventItem),
+  update: (id: string, body: Partial<EventInput>) =>
+    api.patch(`/events/${id}`, body).then((r) => r.data.data as EventItem),
+  remove: (id: string) => api.delete(`/events/${id}`).then(() => undefined),
 };
 
 export const supportApi = {

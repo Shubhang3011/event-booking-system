@@ -18,6 +18,8 @@ const STEPS = [
 export function LandingPage() {
   const { data, isLoading } = useEvents({ when: 'upcoming', sort: 'date', limit: 6 });
   const featured = data?.data ?? [];
+  const { data: ratedData } = useEvents({ when: 'upcoming', sort: '-rating', limit: 6 });
+  const topRated = (ratedData?.data ?? []).filter((e) => e.ratingCount > 0).slice(0, 5);
 
   return (
     <>
@@ -85,11 +87,35 @@ export function LandingPage() {
         </Container>
       </section>
 
+      {/* Highly rated */}
+      {topRated.length > 0 ? (
+        <section className="border-t border-line py-16 md:py-20">
+          <Container>
+            <div className="flex items-baseline justify-between gap-4 border-b border-ink pb-4">
+              <h2 className="font-display text-h2 font-medium text-ink">
+                <span className="font-mono text-[13px] tracking-[0.1em] text-ink-3">02 — </span>Highly rated
+              </h2>
+              <Link
+                to="/events?sort=-rating"
+                className="link-underline inline-flex items-center gap-1.5 text-[14px] text-ink-2"
+              >
+                See all <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
+              </Link>
+            </div>
+            <ol>
+              {topRated.map((event, i) => (
+                <RunningOrderRow key={event.id} event={event} index={i} />
+              ))}
+            </ol>
+          </Container>
+        </section>
+      ) : null}
+
       {/* How it works */}
       <section id="how" className="border-y border-line bg-paper-3/60 py-16 md:py-20">
         <Container>
           <h2 className="font-display text-h2 font-medium text-ink">
-            <span className="font-mono text-[13px] tracking-[0.1em] text-ink-3">02 — </span>How it works
+            <span className="font-mono text-[13px] tracking-[0.1em] text-ink-3">03 — </span>How it works
           </h2>
           <div className="mt-8 grid gap-px overflow-hidden rounded-md border border-line bg-line md:grid-cols-3">
             {STEPS.map(([num, title, body]) => (
@@ -107,7 +133,7 @@ export function LandingPage() {
       <section className="py-16 md:py-20">
         <Container>
           <h2 className="font-display text-h2 font-medium text-ink">
-            <span className="font-mono text-[13px] tracking-[0.1em] text-ink-3">03 — </span>By category
+            <span className="font-mono text-[13px] tracking-[0.1em] text-ink-3">04 — </span>By category
           </h2>
           <div className="mt-6 flex flex-wrap items-baseline gap-x-8 gap-y-3">
             {EVENT_CATEGORIES.map((c) => (

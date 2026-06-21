@@ -25,6 +25,9 @@ export interface EventDoc extends Document {
   organizer: string;
   totalSeats: number;
   availableSeats: number;
+  ratingAverage: number;
+  ratingCount: number;
+  createdBy: Types.ObjectId | null;
   createdAt: Date;
   updatedAt: Date;
   // virtuals
@@ -54,6 +57,9 @@ const eventSchema = new Schema<EventDoc>(
         message: 'availableSeats cannot exceed totalSeats',
       },
     },
+    ratingAverage: { type: Number, default: 0 },
+    ratingCount: { type: Number, default: 0 },
+    createdBy: { type: Schema.Types.ObjectId, ref: 'User', default: null },
   },
   {
     timestamps: true,

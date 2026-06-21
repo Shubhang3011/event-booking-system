@@ -34,6 +34,9 @@ export interface EventItem {
   organizer: string;
   totalSeats: number;
   availableSeats: number;
+  ratingAverage: number;
+  ratingCount: number;
+  createdBy?: string | null;
   isPast: boolean;
   isSoldOut: boolean;
   status: EventStatus;

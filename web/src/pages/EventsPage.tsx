@@ -20,6 +20,7 @@ type View = 'list' | 'grid';
 
 const SORTS: { value: SortKey; label: string }[] = [
   { value: 'date', label: 'Date — soonest' },
+  { value: '-rating', label: 'Top rated' },
   { value: 'newest', label: 'Recently added' },
   { value: '-seats', label: 'Most seats left' },
 ];

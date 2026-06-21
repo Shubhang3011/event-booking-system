@@ -8,11 +8,26 @@ export const listEventsQuerySchema = z.object({
   category: z.enum(EVENT_CATEGORIES).optional(),
   city: z.string().trim().max(80).optional(),
   when: z.enum(['upcoming', 'past', 'all']).default('upcoming'),
-  sort: z.enum(['date', '-date', 'seats', '-seats', 'newest']).default('date'),
+  sort: z.enum(['date', '-date', 'seats', '-seats', 'newest', '-rating']).default('date'),
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(50).default(12),
 });
 
 export const eventIdParamSchema = z.object({ id: objectId });
 
+export const createEventSchema = z.object({
+  title: z.string().trim().min(3, 'Title is too short').max(140),
+  description: z.string().trim().min(10, 'Add a little more detail').max(5000),
+  date: z.coerce.date().refine((d) => d.getTime() > Date.now(), 'Date must be in the future'),
+  venue: z.string().trim().min(2).max(160),
+  city: z.string().trim().min(2).max(80),
+  category: z.enum(EVENT_CATEGORIES),
+  organizer: z.string().trim().min(2).max(120),
+  totalSeats: z.coerce.number().int().min(1, 'At least 1 seat').max(100000),
+});
+
+export const updateEventSchema = createEventSchema.partial();
+
 export type ListEventsQuery = z.infer<typeof listEventsQuerySchema>;
+export type CreateEventInput = z.infer<typeof createEventSchema>;
+export type UpdateEventInput = z.infer<typeof updateEventSchema>;

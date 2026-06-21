@@ -5,14 +5,30 @@ import { validate } from '../../middleware/validate';
 import * as reviewController from '../reviews/review.controller';
 import { createReviewSchema } from '../reviews/review.schema';
 import * as eventController from './event.controller';
-import { eventIdParamSchema, listEventsQuerySchema } from './event.schema';
+import {
+  createEventSchema,
+  eventIdParamSchema,
+  listEventsQuerySchema,
+  updateEventSchema,
+} from './event.schema';
 
 const router = Router();
 
 router.get('/', validate({ query: listEventsQuerySchema }), asyncHandler(eventController.list));
-// Must come before "/:id" so "saved" isn't treated as an id.
+
+// Static segments must be registered before "/:id".
 router.get('/saved', requireAuth, asyncHandler(eventController.listSaved));
+router.get('/mine', requireAuth, asyncHandler(eventController.mine));
+router.post('/', requireAuth, validate({ body: createEventSchema }), asyncHandler(eventController.create));
+
 router.get('/:id', validate({ params: eventIdParamSchema }), asyncHandler(eventController.detail));
+router.patch(
+  '/:id',
+  requireAuth,
+  validate({ params: eventIdParamSchema, body: updateEventSchema }),
+  asyncHandler(eventController.update),
+);
+router.delete('/:id', requireAuth, validate({ params: eventIdParamSchema }), asyncHandler(eventController.remove));
 
 // Bookmark / un-bookmark an event.
 router.post('/:id/save', requireAuth, validate({ params: eventIdParamSchema }), asyncHandler(eventController.save));

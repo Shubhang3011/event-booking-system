@@ -9,7 +9,7 @@ interface TicketStubProps {
   meta: string;
   seats: number;
   code: string;
-  /** When set, the eyebrow/title/meta become a link to this route. */
+  /** When set, the whole ticket is clickable and navigates here. */
   href?: string;
   /** Overlaid rubber stamp when the ticket is no longer active. */
   stamp?: { label: string; tone: 'ink' | 'danger'; animate?: boolean };
@@ -24,7 +24,8 @@ interface TicketStubProps {
 /**
  * The perforated ticket — RECTO's signature object. Two panels split by a
  * dashed seam with punched semicircle notches, a rotated mono booking ref, and
- * a CSS-only barcode. Rendered, never an image.
+ * a CSS-only barcode. When `href` is set the entire ticket is a click target
+ * (via a stretched link), while any footer actions stay independently clickable.
  */
 export function TicketStub({
   eyebrow,
@@ -41,54 +42,46 @@ export function TicketStub({
   className,
 }: TicketStubProps) {
   const dark = variant === 'dark';
-  // Notches are filled with the page colour to read as punched holes; using the
-  // theme variables keeps them correct in both light and dark mode.
+  // Notches are filled with the page colour to read as punched holes.
   const notch = pageBg ?? (dark ? 'rgb(var(--c-ink-bg))' : 'rgb(var(--c-paper))');
-
-  const header = (
-    <>
-      <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[color:var(--ev-accent)]">{eyebrow}</p>
-      <h3 className="mt-1 font-display text-[1.4rem] font-medium leading-tight line-clamp-2">
-        {href ? (
-          <span className="decoration-[color:var(--ev-accent)] decoration-1 underline-offset-4 group-hover/tl:underline">
-            {title}
-          </span>
-        ) : (
-          title
-        )}
-      </h3>
-      <p className={cn('mt-1 truncate text-[13px]', dark ? 'text-paper-on-ink/60' : 'text-ink-3')}>{meta}</p>
-    </>
-  );
 
   return (
     <div
       style={accentStyle}
       className={cn(
-        'relative flex items-stretch overflow-hidden rounded-md border shadow-paper-1',
+        'group/tl relative flex items-stretch overflow-hidden rounded-md border shadow-paper-1 transition-colors',
         dark ? 'border-ink-line bg-ink-bg-2 text-paper-on-ink' : 'border-line bg-paper-2 text-ink',
+        href && 'hover:border-ink',
         className,
       )}
     >
       {/* Left: details */}
       <div className="relative min-w-0 flex-1 p-5">
-        {href ? (
-          <Link to={href} className="group/tl block">
-            {header}
-          </Link>
-        ) : (
-          header
-        )}
+        <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[color:var(--ev-accent)]">{eyebrow}</p>
+        <h3 className="mt-1 font-display text-[1.4rem] font-medium leading-tight line-clamp-2">
+          {href ? (
+            // Stretched link: covers the whole card; footer actions opt out with z-10.
+            <Link
+              to={href}
+              className="decoration-[color:var(--ev-accent)] decoration-1 underline-offset-4 after:absolute after:inset-0 after:content-[''] group-hover/tl:underline"
+            >
+              {title}
+            </Link>
+          ) : (
+            title
+          )}
+        </h3>
+        <p className={cn('mt-1 truncate text-[13px]', dark ? 'text-paper-on-ink/60' : 'text-ink-3')}>{meta}</p>
         <div className="mt-4 flex items-center gap-4">
           <span className={cn('font-mono text-[11px] uppercase tracking-[0.1em]', dark ? 'text-paper-on-ink/55' : 'text-ink-3')}>
             Seats
           </span>
           <span className="font-mono text-base tabular-nums">{String(seats).padStart(2, '0')}</span>
         </div>
-        {footer ? <div className="mt-4">{footer}</div> : null}
+        {footer ? <div className="relative z-10 mt-4">{footer}</div> : null}
 
         {stamp ? (
-          <span className="pointer-events-none absolute right-4 top-4">
+          <span className="pointer-events-none absolute right-4 top-4 z-10">
             <Stamp tone={stamp.tone} animate={stamp.animate}>
               {stamp.label}
             </Stamp>

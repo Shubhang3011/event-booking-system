@@ -8,7 +8,10 @@ import { EventsPage } from '@/pages/EventsPage';
 import { LandingPage } from '@/pages/LandingPage';
 import { AboutPage } from '@/pages/AboutPage';
 import { ContactPage } from '@/pages/ContactPage';
+import { CreateEventPage } from '@/pages/CreateEventPage';
+import { EditEventPage } from '@/pages/EditEventPage';
 import { FaqPage } from '@/pages/FaqPage';
+import { MyEventsPage } from '@/pages/MyEventsPage';
 import { LoginPage } from '@/pages/LoginPage';
 import { MyBookingsPage } from '@/pages/MyBookingsPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
@@ -33,7 +36,31 @@ export default function App() {
               <Route element={<Layout />}>
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/events" element={<EventsPage />} />
+                <Route
+                  path="/events/new"
+                  element={
+                    <ProtectedRoute>
+                      <CreateEventPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/events/mine"
+                  element={
+                    <ProtectedRoute>
+                      <MyEventsPage />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route path="/events/:id" element={<EventDetailPage />} />
+                <Route
+                  path="/events/:id/edit"
+                  element={
+                    <ProtectedRoute>
+                      <EditEventPage />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/about" element={<AboutPage />} />

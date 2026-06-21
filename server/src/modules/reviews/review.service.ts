@@ -1,7 +1,24 @@
+import { Types } from 'mongoose';
 import { AppError } from '../../lib/AppError';
 import { Event } from '../events/event.model';
 import { Review } from './review.model';
 import type { CreateReviewInput } from './review.schema';
+
+/** Recompute and persist an event's denormalized rating average + count. */
+async function recomputeRating(eventId: string): Promise<void> {
+  const agg = await Review.aggregate<{ _id: unknown; avg: number; count: number }>([
+    { $match: { event: new Types.ObjectId(eventId) } },
+    { $group: { _id: '$event', avg: { $avg: '$rating' }, count: { $sum: 1 } } },
+  ]);
+  const first = agg[0];
+  await Event.updateOne(
+    { _id: eventId },
+    {
+      ratingAverage: first ? Math.round(first.avg * 10) / 10 : 0,
+      ratingCount: first ? first.count : 0,
+    },
+  );
+}
 
 export interface ReviewView {
   id: string;
@@ -50,8 +67,10 @@ export async function upsertReview(
     { rating: input.rating, comment: input.comment ?? '' },
     { upsert: true, new: true, setDefaultsOnInsert: true },
   );
+  await recomputeRating(eventId);
 }
 
 export async function deleteReview(userId: string, eventId: string): Promise<void> {
   await Review.deleteOne({ event: eventId, user: userId });
+  await recomputeRating(eventId);
 }

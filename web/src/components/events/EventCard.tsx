@@ -4,6 +4,7 @@ import { cn } from '@/lib/cn';
 import { accentVars, eventAccent } from '@/lib/eventAccent';
 import { dateline } from '@/lib/format';
 import type { EventItem } from '@/lib/types';
+import { StarRating } from '@/components/ui/StarRating';
 import { DateRail } from './DateRail';
 import { EventStatusBadge } from './EventStatusBadge';
 import { SaveButton } from './SaveButton';
@@ -33,6 +34,14 @@ export function EventCard({ event }: { event: EventItem }) {
           <p className="mt-1 truncate text-[13px] text-ink-3">
             {event.venue} · {event.city}
           </p>
+          {event.ratingCount > 0 ? (
+            <div className="mt-1.5 flex items-center gap-1.5">
+              <StarRating value={event.ratingAverage} size={13} />
+              <span className="font-mono text-[11px] tabular-nums text-ink-3">
+                {event.ratingAverage.toFixed(1)} ({event.ratingCount})
+              </span>
+            </div>
+          ) : null}
           <div className="mt-3 flex items-center justify-between gap-2">
             <span className="truncate font-mono text-[11px] uppercase tracking-[0.08em] text-ink-2">
               {event.organizer}

@@ -1,4 +1,4 @@
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/cn';
 import { accentVars, eventAccent } from '@/lib/eventAccent';
@@ -41,6 +41,12 @@ export function RunningOrderRow({ event, index }: { event: EventItem; index: num
           {event.venue}, {event.city}
         </span>
         <span className="flex items-center justify-end gap-3">
+          {event.ratingCount > 0 ? (
+            <span className="hidden items-center gap-1 font-mono text-[12px] tabular-nums text-ink-2 sm:flex">
+              <Star className="h-3.5 w-3.5 fill-accent text-accent" strokeWidth={1.5} />
+              {event.ratingAverage.toFixed(1)}
+            </span>
+          ) : null}
           <EventStatusBadge event={event} />
           <ArrowRight
             className="h-4 w-4 text-ink-3 transition-all duration-150 group-hover:translate-x-1 group-hover:text-[color:var(--ev-accent)]"
