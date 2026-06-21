@@ -1,5 +1,9 @@
 # Linemate — Event Booking System
 
+**🔗 Live demo → [linemate-app.onrender.com](https://linemate-app.onrender.com/events)**
+_(Hosted free on Render — the first load after it's been idle can take ~30s to wake up.)_
+Demo login: **`demo@linemate.events`** / **`password123`**
+
 A full-stack event booking application: browse cultural events and reserve seats. Built as a
 **TypeScript monorepo** with a React + Vite frontend and an Express + MongoDB API.
 
