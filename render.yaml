@@ -1,19 +1,22 @@
-# Render.com blueprint — ONE service that serves the API + the website.
+# Render.com blueprint — ONE free service that serves the API + the website.
+# No credit card required (plan: free).
+#
 # Steps: push to GitHub → render.com → New → Blueprint → pick this repo →
 # set MONGO_URI (your MongoDB Atlas connection string) → Apply.
-#
-# (An alternative two-service setup is available in docs; this single service is
-# the simplest to operate.)
 services:
   - type: web
     name: linemate-app
-    runtime: docker
-    dockerfilePath: ./Dockerfile
-    dockerContext: .
+    runtime: node
+    plan: free # free tier — no card needed
+    buildCommand: npm install --include=dev && npm run build
+    startCommand: node server/dist/index.js
     healthCheckPath: /api/health
+    autoDeploy: true
     envVars:
       - key: NODE_ENV
         value: production
+      - key: CLIENT_DIST
+        value: web/dist # the API also serves the built SPA from here
       - key: JWT_SECRET
         generateValue: true # Render generates a strong secret automatically
       - key: MONGO_URI
