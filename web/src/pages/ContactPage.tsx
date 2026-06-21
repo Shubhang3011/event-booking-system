@@ -7,6 +7,7 @@ import { Container } from '@/components/layout/Container';
 import { Button } from '@/components/ui/Button';
 import { Field } from '@/components/ui/Field';
 import { Input, Textarea } from '@/components/ui/Input';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { supportApi, toApiError } from '@/lib/api';
 import { useToast } from '@/providers/ToastProvider';
 
@@ -18,6 +19,7 @@ const schema = z.object({
 type Values = z.infer<typeof schema>;
 
 export function ContactPage() {
+  useDocumentTitle('Contact');
   const toast = useToast();
   const { user } = useAuth();
   const {

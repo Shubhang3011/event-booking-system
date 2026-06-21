@@ -1,4 +1,4 @@
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, CalendarPlus, Share2 } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useAuth } from '@/auth/AuthContext';
@@ -7,14 +7,20 @@ import { EventCover } from '@/components/events/EventCover';
 import { EventStatusBadge } from '@/components/events/EventStatusBadge';
 import { RunningOrderRow } from '@/components/events/RunningOrderRow';
 import { SaveButton } from '@/components/events/SaveButton';
+import { ReviewsSection } from '@/components/reviews/ReviewsSection';
 import { Container } from '@/components/layout/Container';
 import { Button } from '@/components/ui/Button';
 import { SeatStepper } from '@/components/ui/SeatStepper';
 import { Skeleton } from '@/components/ui/Skeleton';
+import { StarRating } from '@/components/ui/StarRating';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useEvent, useEvents } from '@/hooks/useEvents';
+import { useReviews } from '@/hooks/useReviews';
 import { accentVars, eventAccent } from '@/lib/eventAccent';
+import { downloadIcs, shareEvent } from '@/lib/eventActions';
 import { longDate, padCount, time } from '@/lib/format';
 import type { EventItem } from '@/lib/types';
+import { useToast } from '@/providers/ToastProvider';
 
 function Fact({ label, value }: { label: string; value: string }) {
   return (
@@ -36,13 +42,25 @@ export function EventDetailPage() {
 }
 
 function EventDetail({ event }: { event: EventItem }) {
+  useDocumentTitle(event.title);
   const { isAuthenticated } = useAuth();
+  const toast = useToast();
   const accent = eventAccent(event.id);
   const max = Math.min(10, event.availableSeats);
   const [seats, setSeats] = useState(1);
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const bookable = !event.isPast && !event.isSoldOut;
+  const booked = event.totalSeats - event.availableSeats;
+  const pctBooked = event.totalSeats ? Math.round((booked / event.totalSeats) * 100) : 0;
+
+  const { data: reviews } = useReviews(event.id);
+
+  const handleShare = async () => {
+    const result = await shareEvent(event);
+    if (result === 'copied') toast.success('Link copied to clipboard');
+    else if (result === 'failed') toast.error('Could not share this event');
+  };
 
   // "More like this" — same category, excluding this event.
   const { data: related } = useEvents({ category: event.category, when: 'upcoming', sort: 'date', limit: 5 });
@@ -63,6 +81,33 @@ function EventDetail({ event }: { event: EventItem }) {
             {event.category}
           </p>
           <h1 className="mt-2 font-display text-display font-medium leading-tight text-ink">{event.title}</h1>
+
+          <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-3">
+            {reviews && reviews.summary.count > 0 ? (
+              <span className="inline-flex items-center gap-2">
+                <StarRating value={reviews.summary.average} size={16} />
+                <span className="font-mono text-[12px] tabular-nums text-ink-2">
+                  {reviews.summary.average.toFixed(1)} ({reviews.summary.count})
+                </span>
+              </span>
+            ) : null}
+            <button
+              type="button"
+              onClick={handleShare}
+              className="inline-flex items-center gap-1.5 text-[13px] text-ink-2 transition-colors hover:text-ink"
+            >
+              <Share2 className="h-4 w-4" strokeWidth={1.75} />
+              <span className="link-underline">Share</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => downloadIcs(event)}
+              className="inline-flex items-center gap-1.5 text-[13px] text-ink-2 transition-colors hover:text-ink"
+            >
+              <CalendarPlus className="h-4 w-4" strokeWidth={1.75} />
+              <span className="link-underline">Add to calendar</span>
+            </button>
+          </div>
 
           <dl className="mt-6 max-w-md">
             <Fact label="Date" value={longDate(event.date)} />
@@ -99,6 +144,21 @@ function EventDetail({ event }: { event: EventItem }) {
                   <br />
                   left of {event.totalSeats}
                 </span>
+              </div>
+
+              {/* Capacity bar */}
+              <div className="mt-4">
+                <div
+                  className="h-1.5 w-full overflow-hidden rounded-full bg-paper-3"
+                  role="progressbar"
+                  aria-valuenow={pctBooked}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-label="Percent booked"
+                >
+                  <div className="h-full rounded-full bg-[color:var(--ev-accent)]" style={{ width: `${pctBooked}%` }} />
+                </div>
+                <p className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.08em] text-ink-3">{pctBooked}% booked</p>
               </div>
 
               {bookable ? (
@@ -147,6 +207,8 @@ function EventDetail({ event }: { event: EventItem }) {
           </div>
         </div>
       </div>
+
+      <ReviewsSection eventId={event.id} />
 
       {moreLikeThis.length > 0 ? (
         <section className="mt-16">

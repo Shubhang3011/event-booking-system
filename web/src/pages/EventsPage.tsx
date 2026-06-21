@@ -1,6 +1,7 @@
-import { LayoutGrid, List, Search } from 'lucide-react';
+import { ChevronDown, LayoutGrid, List, Search } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { Container } from '@/components/layout/Container';
 import { EventCard } from '@/components/events/EventCard';
 import { EventCardSkeleton, RunningOrderSkeleton } from '@/components/events/EventSkeletons';
@@ -30,6 +31,7 @@ const WHENS: { value: When; label: string }[] = [
 ];
 
 export function EventsPage() {
+  useDocumentTitle('Events');
   const [params, setParams] = useSearchParams();
 
   const category = (params.get('category') as EventCategory | null) ?? undefined;
@@ -99,21 +101,29 @@ export function EventsPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <label className="sr-only" htmlFor="sort">
-              Sort events
-            </label>
-            <Select
-              id="sort"
-              value={sort}
-              onChange={(e) => update('sort', e.target.value)}
-              className="h-9 w-auto bg-paper-2 text-[13px]"
-            >
-              {SORTS.map((s) => (
-                <option key={s.value} value={s.value}>
-                  {s.label}
-                </option>
-              ))}
-            </Select>
+            <div className="flex items-center gap-2">
+              <label htmlFor="sort" className="hidden font-mono text-[11px] uppercase tracking-[0.1em] text-ink-3 sm:block">
+                Sort
+              </label>
+              <div className="relative">
+                <Select
+                  id="sort"
+                  value={sort}
+                  onChange={(e) => update('sort', e.target.value)}
+                  className="h-9 w-auto bg-paper-2 pr-8 text-[13px]"
+                >
+                  {SORTS.map((s) => (
+                    <option key={s.value} value={s.value}>
+                      {s.label}
+                    </option>
+                  ))}
+                </Select>
+                <ChevronDown
+                  className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-ink-3"
+                  strokeWidth={2}
+                />
+              </div>
+            </div>
 
             <div className="flex items-center rounded-sm border border-line" role="group" aria-label="View mode">
               {([

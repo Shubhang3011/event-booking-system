@@ -1,6 +1,7 @@
 import { Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Container } from '@/components/layout/Container';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 const FAQS = [
   ['How do I book a seat?', 'Open any event, pick how many seats you want, and hit “Reserve”. You’ll need an account — registering takes about ten seconds.'],
@@ -13,6 +14,7 @@ const FAQS = [
 ] as const;
 
 export function FaqPage() {
+  useDocumentTitle('FAQ');
   return (
     <Container className="py-12">
       <div className="mx-auto max-w-3xl">

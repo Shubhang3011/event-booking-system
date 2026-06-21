@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Booking, EventCategory, EventItem, Pagination, User } from './types';
+import type { Booking, EventCategory, EventItem, Pagination, Review, ReviewSummary, User } from './types';
 
 /**
  * Single axios instance. `withCredentials` sends the httpOnly auth cookie on
@@ -81,6 +81,11 @@ export const eventsApi = {
   listSaved: () => api.get('/events/saved').then((r) => r.data.data as EventItem[]),
   save: (id: string) => api.post(`/events/${id}/save`).then(() => undefined),
   unsave: (id: string) => api.delete(`/events/${id}/save`).then(() => undefined),
+  listReviews: (id: string) =>
+    api.get(`/events/${id}/reviews`).then((r) => r.data.data as { reviews: Review[]; summary: ReviewSummary }),
+  upsertReview: (id: string, body: { rating: number; comment: string }) =>
+    api.post(`/events/${id}/reviews`, body).then(() => undefined),
+  deleteReview: (id: string) => api.delete(`/events/${id}/reviews`).then(() => undefined),
 };
 
 export const supportApi = {

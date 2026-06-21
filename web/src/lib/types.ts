@@ -66,3 +66,17 @@ export interface FieldError {
   field: string;
   message: string;
 }
+
+export interface Review {
+  id: string;
+  rating: number;
+  comment: string;
+  user: string;
+  userId: string;
+  createdAt: string;
+}
+
+export interface ReviewSummary {
+  count: number;
+  average: number;
+}

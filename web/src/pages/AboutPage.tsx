@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Container } from '@/components/layout/Container';
 import { Button } from '@/components/ui/Button';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 const STATS = [
   ['Curated events', 'Hand-picked'],
@@ -16,6 +17,7 @@ const VALUES = [
 ] as const;
 
 export function AboutPage() {
+  useDocumentTitle('About');
   return (
     <>
       <section className="border-b border-line">

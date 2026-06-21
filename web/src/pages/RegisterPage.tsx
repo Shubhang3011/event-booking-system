@@ -7,6 +7,7 @@ import { AuthShell, AuthSwitch } from '@/components/layout/AuthShell';
 import { Button } from '@/components/ui/Button';
 import { Field } from '@/components/ui/Field';
 import { Input } from '@/components/ui/Input';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { toApiError } from '@/lib/api';
 import { useToast } from '@/providers/ToastProvider';
 
@@ -18,6 +19,7 @@ const schema = z.object({
 type Values = z.infer<typeof schema>;
 
 export function RegisterPage() {
+  useDocumentTitle('Create account');
   const { register: registerUser, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const toast = useToast();

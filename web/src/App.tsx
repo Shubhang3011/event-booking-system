@@ -12,9 +12,11 @@ import { FaqPage } from '@/pages/FaqPage';
 import { LoginPage } from '@/pages/LoginPage';
 import { MyBookingsPage } from '@/pages/MyBookingsPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
+import { PrivacyPage } from '@/pages/PrivacyPage';
 import { RegisterPage } from '@/pages/RegisterPage';
 import { SavedPage } from '@/pages/SavedPage';
 import { SettingsPage } from '@/pages/SettingsPage';
+import { TermsPage } from '@/pages/TermsPage';
 import { QueryProvider } from '@/providers/QueryProvider';
 import { ThemeProvider } from '@/providers/ThemeProvider';
 import { ToastProvider } from '@/providers/ToastProvider';
@@ -37,6 +39,8 @@ export default function App() {
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/faq" element={<FaqPage />} />
                 <Route path="/contact" element={<ContactPage />} />
+                <Route path="/terms" element={<TermsPage />} />
+                <Route path="/privacy" element={<PrivacyPage />} />
                 <Route
                   path="/bookings"
                   element={

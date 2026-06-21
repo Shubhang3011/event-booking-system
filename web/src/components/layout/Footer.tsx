@@ -94,7 +94,14 @@ export function Footer() {
           <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-3">
             © 2026 Linemate · Made for the curious
           </p>
-          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-3">React · Express · MongoDB</p>
+          <div className="flex items-center gap-4 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-3">
+            <Link to="/terms" className="transition-colors hover:text-ink">
+              Terms
+            </Link>
+            <Link to="/privacy" className="transition-colors hover:text-ink">
+              Privacy
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

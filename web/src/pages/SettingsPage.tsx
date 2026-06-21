@@ -9,6 +9,7 @@ import { Container } from '@/components/layout/Container';
 import { Button } from '@/components/ui/Button';
 import { Field } from '@/components/ui/Field';
 import { Input } from '@/components/ui/Input';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { authApi, toApiError } from '@/lib/api';
 import { cn } from '@/lib/cn';
 import type { User } from '@/lib/types';
@@ -157,6 +158,7 @@ function PasswordForm() {
 }
 
 export function SettingsPage() {
+  useDocumentTitle('Settings');
   return (
     <Container className="py-12">
       <h1 className="font-display text-h1 font-medium text-ink">Settings</h1>

@@ -3,9 +3,11 @@ import { EventCard } from '@/components/events/EventCard';
 import { EventCardSkeleton } from '@/components/events/EventSkeletons';
 import { Container } from '@/components/layout/Container';
 import { Button } from '@/components/ui/Button';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useSavedEvents } from '@/hooks/useSaved';
 
 export function SavedPage() {
+  useDocumentTitle('Saved events');
   const { data: events, isLoading } = useSavedEvents();
 
   return (

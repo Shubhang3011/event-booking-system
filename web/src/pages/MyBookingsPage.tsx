@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { useBookings, useCancelBooking } from '@/hooks/useBookings';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { toApiError } from '@/lib/api';
 import { cn } from '@/lib/cn';
 import { dateline } from '@/lib/format';
@@ -15,6 +16,7 @@ import { useToast } from '@/providers/ToastProvider';
 type Tab = 'upcoming' | 'past' | 'cancelled';
 
 export function MyBookingsPage() {
+  useDocumentTitle('My Tickets');
   const { data: bookings, isLoading, isError } = useBookings();
   const cancelMutation = useCancelBooking();
   const toast = useToast();
