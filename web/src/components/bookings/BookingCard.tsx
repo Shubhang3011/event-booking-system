@@ -39,6 +39,7 @@ export function BookingCard({ booking, onCancel, cancelling = false }: BookingCa
   return (
     <TicketStub
       accentStyle={accentVars(eventAccent(event.id))}
+      href={`/events/${event.id}`}
       eyebrow={dateline(event.date)}
       title={event.title}
       meta={`${event.venue}, ${event.city}`}

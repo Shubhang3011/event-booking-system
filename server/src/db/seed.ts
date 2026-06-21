@@ -199,20 +199,31 @@ const REVIEWERS = [
   { name: 'Priya Nair', email: 'priya@linemate.events' },
   { name: 'Rahul Verma', email: 'rahul@linemate.events' },
   { name: 'Sara Khan', email: 'sara@linemate.events' },
+  { name: 'Ishaan Mehta', email: 'ishaan@linemate.events' },
+  { name: 'Ananya Rao', email: 'ananya@linemate.events' },
+  { name: 'Kabir Singh', email: 'kabir@linemate.events' },
+  { name: 'Meera Iyer', email: 'meera@linemate.events' },
 ];
 
-// Reviews keyed by index into the `events` array above.
+// Reviews keyed by index into the `events` array above. Event 0 has many so the
+// "show all reviews" behaviour is visible out of the box.
 const reviewSeeds: { e: number; r: number; rating: number; comment: string }[] = [
   { e: 0, r: 0, rating: 5, comment: 'The trio was on fire — best jazz night in ages.' },
   { e: 0, r: 1, rating: 4, comment: 'Lovely intimate room. Get there early for a good spot.' },
+  { e: 0, r: 2, rating: 5, comment: 'Brushed drums, a stand-up bass, and a horn section that did not quit.' },
+  { e: 0, r: 3, rating: 4, comment: 'Great vibe and a fair bar. Will be back next month.' },
+  { e: 0, r: 4, rating: 5, comment: 'Felt like a proper old-school jazz club. Goosebumps.' },
+  { e: 0, r: 5, rating: 3, comment: 'Music was superb, but it got crowded near the stage.' },
+  { e: 0, r: 6, rating: 5, comment: 'Two encores! The sax solo brought the house down.' },
+  { e: 0, r: 7, rating: 4, comment: 'Cosy, warm, and the sound was crisp all night.' },
   { e: 2, r: 2, rating: 5, comment: 'The sound system was unreal. Danced till the lights came up.' },
   { e: 2, r: 3, rating: 4, comment: 'Great night — just wish it ran a little longer.' },
   { e: 3, r: 1, rating: 4, comment: 'Genuinely funny sets in the finals. Worth the trip.' },
   { e: 5, r: 0, rating: 5, comment: 'The coastal menu was a highlight of my whole year.' },
-  { e: 6, r: 2, rating: 4, comment: 'Bold staging — the in-the-round format really works.' },
-  { e: 8, r: 3, rating: 5, comment: 'Beautiful show. The curators were generous with their time.' },
-  { e: 10, r: 0, rating: 5, comment: 'Best React lineup yet. The hallway track was gold.' },
-  { e: 10, r: 2, rating: 4, comment: 'Strong talks; lunch queue could be smoother.' },
+  { e: 6, r: 4, rating: 4, comment: 'Bold staging — the in-the-round format really works.' },
+  { e: 8, r: 5, rating: 5, comment: 'Beautiful show. The curators were generous with their time.' },
+  { e: 10, r: 6, rating: 5, comment: 'Best React lineup yet. The hallway track was gold.' },
+  { e: 10, r: 0, rating: 4, comment: 'Strong talks; the lunch queue could be smoother.' },
 ];
 
 interface SeedOptions {

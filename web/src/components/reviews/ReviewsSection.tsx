@@ -1,4 +1,5 @@
 import { format } from 'date-fns';
+import { ChevronDown } from 'lucide-react';
 import { useEffect, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/auth/AuthContext';
@@ -7,7 +8,10 @@ import { Textarea } from '@/components/ui/Input';
 import { StarRating } from '@/components/ui/StarRating';
 import { useDeleteReview, useReviews, useUpsertReview } from '@/hooks/useReviews';
 import { toApiError } from '@/lib/api';
+import { cn } from '@/lib/cn';
 import { useToast } from '@/providers/ToastProvider';
+
+const VISIBLE_REVIEWS = 3;
 
 function initials(name: string): string {
   return name
@@ -28,6 +32,7 @@ export function ReviewsSection({ eventId }: { eventId: string }) {
   const myReview = data?.reviews.find((r) => r.userId === user?.id);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
+  const [showAll, setShowAll] = useState(false);
 
   // Prefill the form with the user's existing review.
   useEffect(() => {
@@ -118,7 +123,7 @@ export function ReviewsSection({ eventId }: { eventId: string }) {
         ) : !data || data.reviews.length === 0 ? (
           <p className="text-[15px] text-ink-3">No reviews yet — be the first.</p>
         ) : (
-          data.reviews.map((r) => (
+          (showAll ? data.reviews : data.reviews.slice(0, VISIBLE_REVIEWS)).map((r) => (
             <div key={r.id} className="border-b border-line pb-6 last:border-b-0">
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
@@ -137,6 +142,18 @@ export function ReviewsSection({ eventId }: { eventId: string }) {
           ))
         )}
       </div>
+
+      {data && data.reviews.length > VISIBLE_REVIEWS ? (
+        <button
+          type="button"
+          onClick={() => setShowAll((s) => !s)}
+          className="mt-6 inline-flex items-center gap-1.5 font-mono text-[12px] uppercase tracking-[0.08em] text-ink-2 transition-colors hover:text-ink"
+          aria-expanded={showAll}
+        >
+          {showAll ? 'Show fewer' : `Show all ${data.reviews.length} reviews`}
+          <ChevronDown className={cn('h-4 w-4 transition-transform', showAll && 'rotate-180')} strokeWidth={1.75} />
+        </button>
+      ) : null}
     </section>
   );
 }

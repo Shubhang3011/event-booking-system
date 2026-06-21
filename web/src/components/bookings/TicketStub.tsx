@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactNode } from 'react';
-import { cn } from '@/lib/cn';
+import { Link } from 'react-router-dom';
 import { Stamp } from '@/components/ui/Stamp';
+import { cn } from '@/lib/cn';
 
 interface TicketStubProps {
   eyebrow: string;
@@ -8,6 +9,8 @@ interface TicketStubProps {
   meta: string;
   seats: number;
   code: string;
+  /** When set, the eyebrow/title/meta become a link to this route. */
+  href?: string;
   /** Overlaid rubber stamp when the ticket is no longer active. */
   stamp?: { label: string; tone: 'ink' | 'danger'; animate?: boolean };
   variant?: 'light' | 'dark';
@@ -29,6 +32,7 @@ export function TicketStub({
   meta,
   seats,
   code,
+  href,
   stamp,
   variant = 'light',
   accentStyle,
@@ -41,6 +45,22 @@ export function TicketStub({
   // theme variables keeps them correct in both light and dark mode.
   const notch = pageBg ?? (dark ? 'rgb(var(--c-ink-bg))' : 'rgb(var(--c-paper))');
 
+  const header = (
+    <>
+      <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[color:var(--ev-accent)]">{eyebrow}</p>
+      <h3 className="mt-1 font-display text-[1.4rem] font-medium leading-tight line-clamp-2">
+        {href ? (
+          <span className="decoration-[color:var(--ev-accent)] decoration-1 underline-offset-4 group-hover/tl:underline">
+            {title}
+          </span>
+        ) : (
+          title
+        )}
+      </h3>
+      <p className={cn('mt-1 truncate text-[13px]', dark ? 'text-paper-on-ink/60' : 'text-ink-3')}>{meta}</p>
+    </>
+  );
+
   return (
     <div
       style={accentStyle}
@@ -52,9 +72,13 @@ export function TicketStub({
     >
       {/* Left: details */}
       <div className="relative min-w-0 flex-1 p-5">
-        <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[color:var(--ev-accent)]">{eyebrow}</p>
-        <h3 className={cn('mt-1 font-display text-[1.4rem] font-medium leading-tight line-clamp-2')}>{title}</h3>
-        <p className={cn('mt-1 truncate text-[13px]', dark ? 'text-paper-on-ink/60' : 'text-ink-3')}>{meta}</p>
+        {href ? (
+          <Link to={href} className="group/tl block">
+            {header}
+          </Link>
+        ) : (
+          header
+        )}
         <div className="mt-4 flex items-center gap-4">
           <span className={cn('font-mono text-[11px] uppercase tracking-[0.1em]', dark ? 'text-paper-on-ink/55' : 'text-ink-3')}>
             Seats
