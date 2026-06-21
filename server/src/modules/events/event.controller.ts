@@ -15,3 +15,20 @@ export async function detail(req: Request, res: Response): Promise<void> {
   const event = await eventService.getEventById(id);
   sendData(res, event);
 }
+
+export async function listSaved(req: Request, res: Response): Promise<void> {
+  const events = await eventService.getSavedEvents(req.userId as string);
+  sendData(res, events);
+}
+
+export async function save(req: Request, res: Response): Promise<void> {
+  const { id } = req.valid.params as { id: string };
+  await eventService.saveEvent(req.userId as string, id);
+  sendData(res, { saved: true }, 201);
+}
+
+export async function unsave(req: Request, res: Response): Promise<void> {
+  const { id } = req.valid.params as { id: string };
+  await eventService.unsaveEvent(req.userId as string, id);
+  sendData(res, { saved: false });
+}

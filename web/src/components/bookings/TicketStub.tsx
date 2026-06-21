@@ -37,7 +37,9 @@ export function TicketStub({
   className,
 }: TicketStubProps) {
   const dark = variant === 'dark';
-  const notch = pageBg ?? (dark ? '#16130F' : '#F7F4EC');
+  // Notches are filled with the page colour to read as punched holes; using the
+  // theme variables keeps them correct in both light and dark mode.
+  const notch = pageBg ?? (dark ? 'rgb(var(--c-ink-bg))' : 'rgb(var(--c-paper))');
 
   return (
     <div

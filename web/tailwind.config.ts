@@ -5,41 +5,47 @@ import type { Config } from 'tailwindcss';
  * Warm paper, confident ink, one vermilion spot colour, a small set of
  * per-event accents, hairline borders, near-flat radii, paper-not-glass shadow.
  */
+// Colours are driven by CSS variables (see index.css) so the whole palette can
+// flip between light and dark themes from one place. The `<alpha-value>` form
+// keeps Tailwind opacity utilities (bg-ink/40 etc.) working.
+const c = (name: string) => `rgb(var(--c-${name}) / <alpha-value>)`;
+
 export default {
+  darkMode: 'class',
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        paper: '#F7F4EC',
-        'paper-2': '#FBF9F3',
-        'paper-3': '#EFEBDF',
-        ink: '#1A1714',
-        'ink-2': '#534E45',
-        'ink-3': '#8A8475',
-        line: '#E2DCCD',
-        'line-strong': '#CFC8B5',
-        accent: '#E5432F',
-        'accent-press': '#C5331F',
-        'accent-wash': '#FBE3DD',
+        paper: c('paper'),
+        'paper-2': c('paper-2'),
+        'paper-3': c('paper-3'),
+        ink: c('ink'),
+        'ink-2': c('ink-2'),
+        'ink-3': c('ink-3'),
+        line: c('line'),
+        'line-strong': c('line-strong'),
+        accent: c('accent'),
+        'accent-press': c('accent-press'),
+        'accent-wash': c('accent-wash'),
         // Curated per-event identity colours
-        'ev-rose': '#C24B63',
-        'ev-olive': '#6E7A38',
-        'ev-cobalt': '#2F4FBF',
-        'ev-plum': '#6A3A66',
-        'ev-teal': '#1F7A72',
-        'ev-ochre': '#B5742A',
+        'ev-rose': c('ev-rose'),
+        'ev-olive': c('ev-olive'),
+        'ev-cobalt': c('ev-cobalt'),
+        'ev-plum': c('ev-plum'),
+        'ev-teal': c('ev-teal'),
+        'ev-ochre': c('ev-ochre'),
         // Status
-        success: '#2E6E4E',
-        'success-wash': '#E2EDE5',
-        warn: '#A8741A',
-        'warn-wash': '#F2E9D5',
-        danger: '#B23A2B',
-        'danger-wash': '#F7E2E0',
-        // The single dark beat
-        'ink-bg': '#16130F',
-        'ink-bg-2': '#221E18',
-        'ink-line': '#2C2A24',
-        'paper-on-ink': '#EDE7D8',
+        success: c('success'),
+        'success-wash': c('success-wash'),
+        warn: c('warn'),
+        'warn-wash': c('warn-wash'),
+        danger: c('danger'),
+        'danger-wash': c('danger-wash'),
+        // The dark "beat" surfaces (login panel, confirmation, toast, board)
+        'ink-bg': c('ink-bg'),
+        'ink-bg-2': c('ink-bg-2'),
+        'ink-line': c('ink-line'),
+        'paper-on-ink': c('paper-on-ink'),
       },
       fontFamily: {
         display: ['Fraunces', 'Georgia', 'serif'],

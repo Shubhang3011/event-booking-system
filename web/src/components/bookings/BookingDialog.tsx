@@ -75,7 +75,6 @@ export function BookingDialog({ open, onClose, event, seats }: BookingDialogProp
             </div>
             <TicketStub
               variant="dark"
-              pageBg="#16130F"
               accentStyle={accentVars(accent)}
               eyebrow={dateline(event.date)}
               title={event.title}

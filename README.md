@@ -55,6 +55,11 @@ design rationale.
   toggle and "load more".
 - 🧪 **Tests** — 22 backend tests (auth, events, booking lifecycle, concurrency) on an
   in-memory MongoDB.
+- 🌙 **Light / dark / system theme** — a polished dark mode (Settings → Appearance) with a
+  no-flash theme loader and persisted preference.
+- 🔖 **Account features** — save/bookmark events to a personal list, plus profile and password
+  management; an account dropdown menu, and About / FAQ / Contact pages with a working contact
+  form and newsletter signup.
 - 🛡️ **Security hardening** — Helmet, CORS allowlist, rate limiting, NoSQL-injection
   sanitization, payload limits, and env validation that refuses to boot with insecure prod
   config.
@@ -216,13 +221,18 @@ request. Full spec: [`docs/openapi.yaml`](docs/openapi.yaml); ready-to-run reque
 | `POST /auth/login` | — | `{ email, password }` | Log in, set cookie → `200` |
 | `POST /auth/logout` | — | — | Clear cookie → `200` |
 | `GET /auth/me` | ✅ | — | Current user → `200` |
+| `PATCH /auth/profile` | ✅ | `{ name }` | Update display name |
+| `PATCH /auth/password` | ✅ | `{ currentPassword, newPassword }` | Change password |
 
 ### Events
 
 | Method & path | Auth | Description |
 | --- | --- | --- |
 | `GET /events` | — | List events. Query: `search`, `category`, `city`, `when` (`upcoming`\|`past`\|`all`), `sort` (`date`\|`-date`\|`seats`\|`-seats`\|`newest`), `page`, `limit`. |
+| `GET /events/saved` | ✅ | The current user's bookmarked events |
 | `GET /events/:id` | — | Event details |
+| `POST /events/:id/save` | ✅ | Bookmark an event |
+| `DELETE /events/:id/save` | ✅ | Remove a bookmark |
 
 ### Bookings
 
@@ -231,6 +241,13 @@ request. Full spec: [`docs/openapi.yaml`](docs/openapi.yaml); ready-to-run reque
 | `POST /bookings` | ✅ | `{ eventId, seats }` | Reserve seats (1–10) → `201` |
 | `GET /bookings` | ✅ | — | Your bookings. Query: `status` (`CONFIRMED`\|`CANCELLED`\|`all`) |
 | `PATCH /bookings/:id/cancel` | ✅ | — | Cancel & release seats → `200` |
+
+### Other
+
+| Method & path | Auth | Body | Description |
+| --- | --- | --- | --- |
+| `POST /contact` | — | `{ name, email, message }` | Submit a contact message |
+| `POST /newsletter` | — | `{ email }` | Subscribe to the newsletter |
 
 ### Examples
 

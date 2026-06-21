@@ -59,6 +59,9 @@ export const authApi = {
         if (axios.isAxiosError(err) && err.response?.status === 401) return null;
         throw err;
       }),
+  updateProfile: (body: { name: string }) => api.patch('/auth/profile', body).then((r) => r.data.data as User),
+  changePassword: (body: { currentPassword: string; newPassword: string }) =>
+    api.patch('/auth/password', body).then((r) => r.data.data as { message: string }),
 };
 
 export interface ListEventsParams {
@@ -75,6 +78,16 @@ export const eventsApi = {
   list: (params: ListEventsParams) =>
     api.get('/events', { params }).then((r) => r.data as { data: EventItem[]; pagination: Pagination }),
   get: (id: string) => api.get(`/events/${id}`).then((r) => r.data.data as EventItem),
+  listSaved: () => api.get('/events/saved').then((r) => r.data.data as EventItem[]),
+  save: (id: string) => api.post(`/events/${id}/save`).then(() => undefined),
+  unsave: (id: string) => api.delete(`/events/${id}/save`).then(() => undefined),
+};
+
+export const supportApi = {
+  contact: (body: { name: string; email: string; message: string }) =>
+    api.post('/contact', body).then((r) => r.data.data as { message: string }),
+  subscribe: (email: string) =>
+    api.post('/newsletter', { email }).then((r) => r.data.data as { message: string }),
 };
 
 export interface CreateBookingPayload {

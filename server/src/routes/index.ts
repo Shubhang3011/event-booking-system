@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { authRouter } from '../modules/auth/auth.routes';
 import { bookingRouter } from '../modules/bookings/booking.routes';
 import { eventRouter } from '../modules/events/event.routes';
+import { supportRouter } from '../modules/support/support.routes';
 
 const router = Router();
 
@@ -19,5 +20,6 @@ router.get('/health', (_req, res) => {
 router.use('/auth', authRouter);
 router.use('/events', eventRouter);
 router.use('/bookings', bookingRouter);
+router.use('/', supportRouter); // /contact, /newsletter
 
 export const apiRouter = router;

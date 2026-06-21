@@ -6,6 +6,7 @@ import { BookingDialog } from '@/components/bookings/BookingDialog';
 import { EventCover } from '@/components/events/EventCover';
 import { EventStatusBadge } from '@/components/events/EventStatusBadge';
 import { RunningOrderRow } from '@/components/events/RunningOrderRow';
+import { SaveButton } from '@/components/events/SaveButton';
 import { Container } from '@/components/layout/Container';
 import { Button } from '@/components/ui/Button';
 import { SeatStepper } from '@/components/ui/SeatStepper';
@@ -138,6 +139,10 @@ function EventDetail({ event }: { event: EventItem }) {
                   </Button>
                 </div>
               )}
+
+              <div className="mt-4 border-t border-line pt-4">
+                <SaveButton eventId={event.id} variant="labelled" className="w-full justify-center" />
+              </div>
             </div>
           </div>
         </div>

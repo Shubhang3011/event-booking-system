@@ -7,6 +7,64 @@
   /* Per-event accent; overridden inline on event-scoped surfaces. */
   --ev-accent: #e5432f;
   --ev-accent-ink: #fbf9f3;
+
+  /* Light theme — colours as "R G B" channels so Tailwind alpha works. */
+  --c-paper: 247 244 236;
+  --c-paper-2: 251 249 243;
+  --c-paper-3: 239 235 223;
+  --c-ink: 26 23 20;
+  --c-ink-2: 83 78 69;
+  --c-ink-3: 138 132 117;
+  --c-line: 226 220 205;
+  --c-line-strong: 207 200 181;
+  --c-accent: 229 67 47;
+  --c-accent-press: 197 51 31;
+  --c-accent-wash: 251 227 221;
+  --c-ev-rose: 194 75 99;
+  --c-ev-olive: 110 122 56;
+  --c-ev-cobalt: 47 79 191;
+  --c-ev-plum: 106 58 102;
+  --c-ev-teal: 31 122 114;
+  --c-ev-ochre: 181 116 42;
+  --c-success: 46 110 78;
+  --c-success-wash: 226 237 229;
+  --c-warn: 168 116 26;
+  --c-warn-wash: 242 233 213;
+  --c-danger: 178 58 43;
+  --c-danger-wash: 247 226 224;
+  --c-ink-bg: 22 19 15;
+  --c-ink-bg-2: 34 30 24;
+  --c-ink-line: 44 42 36;
+  --c-paper-on-ink: 237 231 216;
+
+  color-scheme: light;
+}
+
+/* Dark theme — warm dark, the vermilion accent kept (slightly brightened). */
+.dark {
+  --c-paper: 23 20 15;
+  --c-paper-2: 32 28 22;
+  --c-paper-3: 16 14 10;
+  --c-ink: 236 230 216;
+  --c-ink-2: 181 173 157;
+  --c-ink-3: 139 133 118;
+  --c-line: 42 37 29;
+  --c-line-strong: 60 53 41;
+  --c-accent: 233 78 56;
+  --c-accent-press: 245 96 74;
+  --c-accent-wash: 58 33 27;
+  --c-success: 91 181 133;
+  --c-success-wash: 24 39 30;
+  --c-warn: 214 155 62;
+  --c-warn-wash: 44 36 21;
+  --c-danger: 224 96 78;
+  --c-danger-wash: 48 25 22;
+  --c-ink-bg: 35 30 23;
+  --c-ink-bg-2: 44 38 29;
+  --c-ink-line: 58 51 40;
+  --c-paper-on-ink: 236 230 216;
+
+  color-scheme: dark;
 }
 
 @layer base {
@@ -27,13 +85,13 @@
   }
 
   ::selection {
-    background: #fbe3dd;
-    color: #1a1714;
+    background: rgb(var(--c-accent-wash));
+    color: rgb(var(--c-ink));
   }
 
   /* Visible, on-brand focus for keyboard users only. */
   :focus-visible {
-    outline: 2px solid theme('colors.accent');
+    outline: 2px solid rgb(var(--c-accent));
     outline-offset: 2px;
     border-radius: 2px;
   }
@@ -41,7 +99,7 @@
   /* Warm, slim scrollbar that matches the paper. */
   * {
     scrollbar-width: thin;
-    scrollbar-color: #cfc8b5 transparent;
+    scrollbar-color: rgb(var(--c-line-strong)) transparent;
   }
 
   h1,
@@ -130,8 +188,8 @@
       90deg,
       transparent 0,
       transparent calc(8.333% - 1px),
-      rgba(226, 220, 205, 0.55) calc(8.333% - 1px),
-      rgba(226, 220, 205, 0.55) 8.333%
+      rgb(var(--c-line) / 0.55) calc(8.333% - 1px),
+      rgb(var(--c-line) / 0.55) 8.333%
     );
   }
 }

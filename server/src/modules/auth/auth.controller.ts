@@ -3,7 +3,12 @@ import { clearAuthCookie, setAuthCookie } from '../../lib/cookies';
 import { sendData } from '../../lib/http';
 import { signAuthToken } from '../../lib/jwt';
 import * as authService from './auth.service';
-import type { LoginInput, RegisterInput } from './auth.schema';
+import type {
+  ChangePasswordInput,
+  LoginInput,
+  RegisterInput,
+  UpdateProfileInput,
+} from './auth.schema';
 
 export async function register(req: Request, res: Response): Promise<void> {
   const user = await authService.registerUser(req.valid.body as RegisterInput);
@@ -25,4 +30,14 @@ export async function logout(_req: Request, res: Response): Promise<void> {
 export async function me(req: Request, res: Response): Promise<void> {
   const user = await authService.getUserById(req.userId as string);
   sendData(res, user);
+}
+
+export async function updateProfile(req: Request, res: Response): Promise<void> {
+  const user = await authService.updateProfile(req.userId as string, req.valid.body as UpdateProfileInput);
+  sendData(res, user);
+}
+
+export async function changePassword(req: Request, res: Response): Promise<void> {
+  await authService.changePassword(req.userId as string, req.valid.body as ChangePasswordInput);
+  sendData(res, { message: 'Password updated' });
 }

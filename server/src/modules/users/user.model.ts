@@ -6,6 +6,7 @@ export interface UserDoc extends Document {
   name: string;
   email: string;
   passwordHash: string;
+  savedEvents: Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidate: string): Promise<boolean>;
@@ -23,6 +24,8 @@ const userSchema = new Schema<UserDoc>(
     },
     // `select: false` keeps the hash out of every query result by default.
     passwordHash: { type: String, required: true, select: false },
+    // Events the user has bookmarked.
+    savedEvents: { type: [{ type: Schema.Types.ObjectId, ref: 'Event' }], default: [] },
   },
   {
     timestamps: true,
