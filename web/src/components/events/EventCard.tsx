@@ -14,7 +14,7 @@ export function EventCard({ event }: { event: EventItem }) {
   return (
     <div
       className={cn(
-        'group relative flex flex-col overflow-hidden rounded-xl border border-line bg-paper-2 shadow-paper-1 transition-shadow duration-200 hover:shadow-paper-2',
+        'group relative flex flex-col overflow-hidden rounded-xl border border-line bg-paper-2 shadow-paper-1 transition-all duration-200 hover:-translate-y-1 hover:border-line-strong hover:shadow-paper-2',
         dimmed && 'opacity-90',
       )}
     >

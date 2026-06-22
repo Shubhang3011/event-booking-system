@@ -92,8 +92,8 @@ function EventDetail({ event }: { event: EventItem }) {
       <div className="mt-6 grid gap-10 lg:grid-cols-[1.6fr_1fr]">
         {/* Left: editorial */}
         <div style={accentVars(accent)}>
-          <div className="relative aspect-[16/9] w-full overflow-hidden rounded-lg border border-line bg-paper-3">
-            <EventImage event={event} />
+          <div className="group relative aspect-[16/9] w-full overflow-hidden rounded-xl border border-line bg-paper-3">
+            <EventImage event={event} className="transition-transform duration-500 group-hover:scale-105" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/45 to-transparent" aria-hidden />
             <span className="absolute left-4 top-4 rounded-full bg-paper-2/90 px-2.5 py-1 text-[11px] font-medium text-ink-2 backdrop-blur-sm">
               {event.category}
