@@ -8,7 +8,7 @@ export function EventStatusBadge({ event }: { event: EventItem }) {
   if (event.isSoldOut) return <Badge tone="neutral">Sold out</Badge>;
   if (isToday(new Date(event.date))) {
     return (
-      <Badge tone="accent" withDot pulse>
+      <Badge tone="accent" withDot>
         Tonight
       </Badge>
     );

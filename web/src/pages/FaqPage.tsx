@@ -18,13 +18,13 @@ export function FaqPage() {
   return (
     <Container className="py-12">
       <div className="mx-auto max-w-3xl">
-        <p className="font-mono text-[12px] uppercase tracking-[0.16em] text-ink-3">Help</p>
-        <h1 className="mt-3 font-display text-h1 font-medium text-ink">Frequently asked questions</h1>
+        <p className="text-[12px] text-ink-3">Help</p>
+        <h1 className="mt-3 text-h1 font-semibold text-ink">Frequently asked questions</h1>
 
         <div className="mt-8 border-y border-line">
           {FAQS.map(([q, a]) => (
             <details key={q} className="group border-b border-line py-4 last:border-b-0">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-[1.25rem] font-medium text-ink [&::-webkit-details-marker]:hidden">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-[1.25rem] font-medium text-ink [&::-webkit-details-marker]:hidden">
                 {q}
                 <Plus
                   className="h-5 w-5 shrink-0 text-ink-3 transition-transform duration-200 group-open:rotate-45"

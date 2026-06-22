@@ -17,7 +17,7 @@ export function EventImage({ event, className }: { event: EventItem; className?:
         style={{ backgroundImage: `linear-gradient(135deg, ${accent}33, transparent 70%)` }}
         aria-hidden
       >
-        <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-3">{event.category}</span>
+        <span className="text-[11px] text-ink-3">{event.category}</span>
       </div>
     );
   }

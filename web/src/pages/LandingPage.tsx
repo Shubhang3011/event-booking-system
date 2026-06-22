@@ -73,16 +73,15 @@ export function LandingPage() {
       {/* Hero */}
       <section className="border-b border-line">
         <Container className="py-16 md:py-24">
-          <p className="font-mono text-[12px] uppercase tracking-[0.16em] text-ink-3">Linemate · Live events in India</p>
-          <h1 className="font-wonk mt-4 max-w-[16ch] font-display text-display-xl font-medium text-ink">
-            Find your next <span className="italic text-accent">night out.</span>
+          <h1 className="max-w-[18ch] text-display-xl font-bold tracking-tight text-ink">
+            Find your next <span className="text-accent">night out</span>.
           </h1>
-          <p className="mt-5 max-w-[52ch] text-body-lg text-ink-2">
+          <p className="mt-4 max-w-[52ch] text-body-lg text-ink-2">
             Gigs, talks, long dinners and late nights — discover what's on near you and book a seat in seconds.
           </p>
           <HeroSearch />
           <div className="mt-5 flex flex-wrap items-center gap-2">
-            <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-ink-3">Popular:</span>
+            <span className="text-[13px] text-ink-3">Popular</span>
             {POPULAR.map((c) => (
               <Link
                 key={c}
@@ -101,7 +100,7 @@ export function LandingPage() {
         <Container>
           <div className="flex items-end justify-between gap-4">
             <div>
-              <h2 className="font-display text-h2 font-medium text-ink">Trending this week</h2>
+              <h2 className="text-h2 font-semibold text-ink">Trending this week</h2>
               <p className="mt-1 text-[14px] text-ink-2">The events filling up fastest right now.</p>
             </div>
             <Link to="/events?sort=-trending" className="link-underline inline-flex items-center gap-1.5 text-[14px] text-ink-2">
@@ -119,7 +118,7 @@ export function LandingPage() {
       {/* Categories */}
       <section className="border-y border-line bg-paper-3/40 py-14 md:py-16">
         <Container>
-          <h2 className="font-display text-h2 font-medium text-ink">Browse by category</h2>
+          <h2 className="text-h2 font-semibold text-ink">Browse by category</h2>
           <div className="mt-6">
             <CategoryTiles />
           </div>
@@ -130,7 +129,7 @@ export function LandingPage() {
       <section className="py-14 md:py-16">
         <Container>
           <div className="flex items-end justify-between gap-4">
-            <h2 className="font-display text-h2 font-medium text-ink">Happening soon</h2>
+            <h2 className="text-h2 font-semibold text-ink">Happening soon</h2>
             <Link to="/events" className="link-underline inline-flex items-center gap-1.5 text-[14px] text-ink-2">
               All events <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
             </Link>

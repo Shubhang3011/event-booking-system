@@ -15,8 +15,8 @@ export function CreateEventPage() {
   return (
     <Container className="py-12">
       <div className="mx-auto max-w-2xl">
-        <p className="font-mono text-[12px] uppercase tracking-[0.16em] text-ink-3">Organizer</p>
-        <h1 className="mt-3 font-display text-h1 font-medium text-ink">Create an event</h1>
+        <p className="text-[12px] text-ink-3">Organizer</p>
+        <h1 className="mt-3 text-h1 font-semibold text-ink">Create an event</h1>
         <p className="mt-2 text-ink-2">Publish an event for people to discover and book.</p>
         <div className="mt-8">
           <EventForm

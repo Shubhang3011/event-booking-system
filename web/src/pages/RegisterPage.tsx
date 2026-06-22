@@ -55,7 +55,7 @@ export function RegisterPage() {
     >
       <div className="mx-auto w-full max-w-sm">
         <AuthSwitch active="register" />
-        <h2 className="mt-6 font-display text-h1 font-medium text-ink">Create your account</h2>
+        <h2 className="mt-6 text-h1 font-semibold text-ink">Create your account</h2>
         <p className="mt-1 text-[14px] text-ink-2">It takes about ten seconds.</p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4" noValidate>

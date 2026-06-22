@@ -27,7 +27,7 @@ export function RunningOrderSkeleton({ rows = 6 }: { rows?: number }) {
     <ol>
       {Array.from({ length: rows }).map((_, i) => (
         <li key={i} className="grid grid-cols-[3rem_1fr_auto] items-center gap-4 border-b border-line py-5">
-          <span className="font-mono text-[13px] tabular-nums text-ink-3/50">{String(i + 1).padStart(2, '0')}</span>
+          <span className="text-[13px] tabular-nums text-ink-3/50">{String(i + 1).padStart(2, '0')}</span>
           <Skeleton className="h-6 w-[60%]" />
           <Skeleton className="h-5 w-20 rounded-full" />
         </li>

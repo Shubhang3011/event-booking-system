@@ -48,8 +48,12 @@ export function eventAccent(id: string): EventAccent {
   return { accent, onAccent };
 }
 
-/** CSS custom properties to scope an event's accent onto a subtree. */
-export function accentVars(source: string | EventAccent): CSSProperties {
-  const a = typeof source === 'string' ? eventAccent(source) : source;
-  return { ['--ev-accent']: a.accent, ['--ev-accent-ink']: a.onAccent } as CSSProperties;
+/**
+ * Previously scoped a per-event accent onto a subtree. The product now uses one
+ * constant brand accent (set in index.css), so this is a no-op kept only so
+ * existing call sites compile. `eventAccent` is still used for the image-fallback
+ * gradient.
+ */
+export function accentVars(_source?: string | EventAccent): CSSProperties {
+  return {};
 }

@@ -30,7 +30,7 @@ export function SeatStepper({ value, onChange, min = 1, max, disabled = false }:
         <button type="button" onClick={() => onChange(Math.max(min, value - 1))} disabled={disabled || atMin} aria-label="Remove a seat" className={cn(stepBtn, 'border-r border-line')}>
           <Minus className="h-4 w-4" strokeWidth={1.75} />
         </button>
-        <output className="grid min-w-[3.5rem] place-items-center px-3 font-mono text-lg tabular-nums text-ink" aria-live="polite">
+        <output className="grid min-w-[3.5rem] place-items-center px-3 text-lg tabular-nums text-ink" aria-live="polite">
           {padCount(value, 2)}
         </output>
         <button type="button" onClick={() => onChange(Math.min(max, value + 1))} disabled={disabled || atMax} aria-label="Add a seat" className={cn(stepBtn, 'border-l border-line')}>
@@ -48,11 +48,11 @@ export function SeatStepper({ value, onChange, min = 1, max, disabled = false }:
             )}
           />
         ))}
-        {max > 10 ? <span className="ml-1 font-mono text-[11px] text-ink-3">+{max - 10}</span> : null}
+        {max > 10 ? <span className="ml-1 text-[11px] text-ink-3">+{max - 10}</span> : null}
       </div>
 
       {atMax ? (
-        <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-ink-3">Max {max} available</p>
+        <p className="text-[11px] text-ink-3">Max {max} available</p>
       ) : null}
     </div>
   );

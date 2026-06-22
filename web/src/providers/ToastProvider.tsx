@@ -70,7 +70,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               <span
                 aria-hidden
                 className={cn(
-                  'mt-0.5 font-mono text-sm font-semibold leading-none',
+                  'mt-0.5 text-sm font-semibold leading-none',
                   t.type === 'success' && 'text-success',
                   t.type === 'error' && 'text-danger',
                   t.type === 'info' && 'text-accent',
@@ -80,7 +80,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               </span>
               <div className="min-w-0 flex-1">
                 {t.title ? (
-                  <p className="font-mono text-[11px] uppercase tracking-[0.1em] text-paper-on-ink/70">{t.title}</p>
+                  <p className="text-[11px] text-paper-on-ink/70">{t.title}</p>
                 ) : null}
                 <p className="text-sm leading-snug">{t.message}</p>
               </div>
@@ -88,7 +88,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 type="button"
                 onClick={() => dismiss(t.id)}
                 aria-label="Dismiss notification"
-                className="-mr-1 -mt-1 p-1 font-mono text-base leading-none text-paper-on-ink/50 transition-colors hover:text-paper-on-ink"
+                className="-mr-1 -mt-1 p-1 text-base leading-none text-paper-on-ink/50 transition-colors hover:text-paper-on-ink"
               >
                 ×
               </button>

@@ -37,8 +37,8 @@ export function EditEventPage() {
   return (
     <Container className="py-12">
       <div className="mx-auto max-w-2xl">
-        <p className="font-mono text-[12px] uppercase tracking-[0.16em] text-ink-3">Organizer</p>
-        <h1 className="mt-3 font-display text-h1 font-medium text-ink">Edit event</h1>
+        <p className="text-[12px] text-ink-3">Organizer</p>
+        <h1 className="mt-3 text-h1 font-semibold text-ink">Edit event</h1>
         <div className="mt-8">
           <EventForm
             submitLabel="Save changes"

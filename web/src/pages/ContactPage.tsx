@@ -46,8 +46,8 @@ export function ContactPage() {
     <Container className="py-12">
       <div className="grid gap-12 md:grid-cols-[1fr_1.4fr]">
         <div>
-          <p className="font-mono text-[12px] uppercase tracking-[0.16em] text-ink-3">Contact</p>
-          <h1 className="mt-3 font-display text-h1 font-medium text-ink">Say hello</h1>
+          <p className="text-[12px] text-ink-3">Contact</p>
+          <h1 className="mt-3 text-h1 font-semibold text-ink">Say hello</h1>
           <p className="mt-3 max-w-prose text-ink-2">
             Questions, feedback, or want to list an event? Drop us a line and a real person will get back to you.
           </p>

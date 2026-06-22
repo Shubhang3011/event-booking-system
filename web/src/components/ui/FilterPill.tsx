@@ -11,9 +11,9 @@ export function FilterPill({ active = false, className, children, ...props }: Fi
       type="button"
       aria-pressed={active}
       className={cn(
-        'rounded-full border px-3 py-1.5 font-mono text-[12px] uppercase tracking-[0.06em] transition-colors duration-150',
+        'rounded-full border px-3.5 py-1.5 text-[13px] font-medium transition-colors duration-150',
         active
-          ? 'border-ink bg-ink text-paper-2'
+          ? 'border-accent bg-accent text-white'
           : 'border-line bg-paper-2 text-ink-2 hover:border-line-strong hover:text-ink',
         className,
       )}

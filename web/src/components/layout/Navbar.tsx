@@ -13,7 +13,7 @@ function Brand() {
       <span className="grid h-6 w-6 place-items-center rounded-sm bg-ink">
         <span className="h-2.5 w-2.5 rounded-full bg-accent" />
       </span>
-      <span className="font-display text-[1.45rem] font-semibold tracking-tight text-ink">Linemate</span>
+      <span className="text-[1.25rem] font-bold tracking-tight text-ink">Linemate</span>
     </Link>
   );
 }
@@ -174,7 +174,7 @@ export function Navbar() {
                 <span className="link-underline">Sign in</span>
               </Link>
               <Link to="/register" className="hidden sm:inline-flex">
-                <Button size="sm">Get a ticket</Button>
+                <Button size="sm">Sign up</Button>
               </Link>
             </>
           )}

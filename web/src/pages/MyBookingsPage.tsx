@@ -55,8 +55,8 @@ export function MyBookingsPage() {
   return (
     <Container className="py-12">
       <header className="flex items-end justify-between gap-4">
-        <h1 className="font-display text-h1 font-medium text-ink">My Tickets</h1>
-        <span className="font-mono text-[12px] uppercase tracking-[0.1em] text-ink-3">
+        <h1 className="text-h1 font-semibold text-ink">My Tickets</h1>
+        <span className="text-[12px] text-ink-3">
           {(bookings ?? []).length} total
         </span>
       </header>
@@ -75,7 +75,7 @@ export function MyBookingsPage() {
             )}
           >
             {t.label}
-            <span className="font-mono text-[11px] tabular-nums text-ink-3">{t.count}</span>
+            <span className="text-[11px] tabular-nums text-ink-3">{t.count}</span>
             {tab === t.key ? <span className="absolute inset-x-0 bottom-0 h-0.5 bg-accent" /> : null}
           </button>
         ))}
@@ -83,7 +83,7 @@ export function MyBookingsPage() {
 
       <div className="mt-8">
         {isError ? (
-          <p className="font-mono text-[13px] text-danger">Could not load your bookings. Please refresh.</p>
+          <p className="text-[13px] text-danger">Could not load your bookings. Please refresh.</p>
         ) : isLoading ? (
           <div className="grid gap-4 lg:grid-cols-2">
             {Array.from({ length: 2 }).map((_, i) => (
@@ -124,8 +124,8 @@ export function MyBookingsPage() {
       >
         {target ? (
           <div>
-            <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-3">{dateline(target.event.date)}</p>
-            <p className="mt-1 font-display text-[1.4rem] font-medium leading-tight text-ink">{target.event.title}</p>
+            <p className="text-[11px] text-ink-3">{dateline(target.event.date)}</p>
+            <p className="mt-1 text-[1.4rem] font-medium leading-tight text-ink">{target.event.title}</p>
             <p className="mt-1 text-[13px] text-ink-3">
               {target.seats} seat{target.seats === 1 ? '' : 's'} · {target.bookingCode}
             </p>
@@ -151,7 +151,7 @@ function EmptyTickets({ tab }: { tab: Tab }) {
       <div className="flex h-16 w-28 items-center justify-center rounded-md border border-dashed border-line-strong text-ink-3" aria-hidden>
         <span className="h-full w-px border-l border-dashed border-line-strong" />
       </div>
-      <p className="font-display text-[1.35rem] italic text-ink-2">{copy[tab]}</p>
+      <p className="text-[1.35rem] text-ink-2">{copy[tab]}</p>
       {tab === 'upcoming' ? (
         <Link to="/events">
           <Button>Browse events</Button>

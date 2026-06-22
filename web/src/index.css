@@ -4,65 +4,61 @@
 
 :root {
   --ease-editorial: cubic-bezier(0.2, 0.6, 0.2, 1);
-  /* Per-event accent; overridden inline on event-scoped surfaces. */
+  /* Single brand accent (no per-event rainbow). */
   --ev-accent: #e5432f;
-  --ev-accent-ink: #fbf9f3;
+  --ev-accent-ink: #ffffff;
 
-  /* Light theme — colours as "R G B" channels so Tailwind alpha works. */
-  --c-paper: 247 244 236;
-  --c-paper-2: 251 249 243;
-  --c-paper-3: 239 235 223;
-  --c-ink: 26 23 20;
-  --c-ink-2: 83 78 69;
-  --c-ink-3: 138 132 117;
-  --c-line: 226 220 205;
-  --c-line-strong: 207 200 181;
+  /* Light theme — clean cool neutral, one vermilion accent. "R G B" channels. */
+  --c-paper: 250 250 251;
+  --c-paper-2: 255 255 255;
+  --c-paper-3: 241 242 244;
+  --c-ink: 17 24 39;
+  --c-ink-2: 75 85 99;
+  --c-ink-3: 107 114 128;
+  --c-line: 229 231 235;
+  --c-line-strong: 209 213 219;
   --c-accent: 229 67 47;
   --c-accent-press: 197 51 31;
-  --c-accent-wash: 251 227 221;
-  --c-ev-rose: 194 75 99;
-  --c-ev-olive: 110 122 56;
-  --c-ev-cobalt: 47 79 191;
-  --c-ev-plum: 106 58 102;
-  --c-ev-teal: 31 122 114;
-  --c-ev-ochre: 181 116 42;
-  --c-success: 46 110 78;
-  --c-success-wash: 226 237 229;
-  --c-warn: 168 116 26;
-  --c-warn-wash: 242 233 213;
-  --c-danger: 178 58 43;
-  --c-danger-wash: 247 226 224;
-  --c-ink-bg: 22 19 15;
-  --c-ink-bg-2: 34 30 24;
-  --c-ink-line: 44 42 36;
-  --c-paper-on-ink: 237 231 216;
+  --c-accent-wash: 253 236 234;
+  --c-success: 22 163 74;
+  --c-success-wash: 220 252 231;
+  --c-warn: 217 119 6;
+  --c-warn-wash: 254 243 199;
+  --c-danger: 220 38 38;
+  --c-danger-wash: 254 226 226;
+  --c-ink-bg: 24 24 27;
+  --c-ink-bg-2: 39 39 42;
+  --c-ink-line: 63 63 70;
+  --c-paper-on-ink: 250 250 250;
 
   color-scheme: light;
 }
 
-/* Dark theme — warm dark, the vermilion accent kept (slightly brightened). */
 .dark {
-  --c-paper: 23 20 15;
-  --c-paper-2: 32 28 22;
-  --c-paper-3: 16 14 10;
-  --c-ink: 236 230 216;
-  --c-ink-2: 181 173 157;
-  --c-ink-3: 139 133 118;
-  --c-line: 42 37 29;
-  --c-line-strong: 60 53 41;
-  --c-accent: 233 78 56;
-  --c-accent-press: 245 96 74;
-  --c-accent-wash: 58 33 27;
-  --c-success: 91 181 133;
-  --c-success-wash: 24 39 30;
-  --c-warn: 214 155 62;
-  --c-warn-wash: 44 36 21;
-  --c-danger: 224 96 78;
-  --c-danger-wash: 48 25 22;
-  --c-ink-bg: 35 30 23;
-  --c-ink-bg-2: 44 38 29;
-  --c-ink-line: 58 51 40;
-  --c-paper-on-ink: 236 230 216;
+  --ev-accent: #f2553b;
+  --ev-accent-ink: #ffffff;
+
+  --c-paper: 9 9 11;
+  --c-paper-2: 24 24 27;
+  --c-paper-3: 39 39 42;
+  --c-ink: 244 244 245;
+  --c-ink-2: 161 161 170;
+  --c-ink-3: 113 113 122;
+  --c-line: 39 39 42;
+  --c-line-strong: 63 63 70;
+  --c-accent: 242 85 59;
+  --c-accent-press: 255 106 80;
+  --c-accent-wash: 42 23 20;
+  --c-success: 74 222 128;
+  --c-success-wash: 20 39 27;
+  --c-warn: 251 191 36;
+  --c-warn-wash: 42 33 10;
+  --c-danger: 248 113 113;
+  --c-danger-wash: 42 20 20;
+  --c-ink-bg: 24 24 27;
+  --c-ink-bg-2: 39 39 42;
+  --c-ink-line: 63 63 70;
+  --c-paper-on-ink: 244 244 245;
 
   color-scheme: dark;
 }
@@ -79,24 +75,17 @@
     text-rendering: optimizeLegibility;
   }
 
-  /* Fraunces is our display voice — opsz handled automatically. */
-  .font-display {
-    font-optical-sizing: auto;
-  }
-
   ::selection {
     background: rgb(var(--c-accent-wash));
-    color: rgb(var(--c-ink));
+    color: rgb(var(--c-accent-press));
   }
 
-  /* Visible, on-brand focus for keyboard users only. */
   :focus-visible {
     outline: 2px solid rgb(var(--c-accent));
     outline-offset: 2px;
-    border-radius: 2px;
+    border-radius: 4px;
   }
 
-  /* Warm, slim scrollbar that matches the paper. */
   * {
     scrollbar-width: thin;
     scrollbar-color: rgb(var(--c-line-strong)) transparent;
@@ -105,7 +94,9 @@
   h1,
   h2,
   h3 {
+    font-weight: 600;
     text-wrap: balance;
+    letter-spacing: -0.01em;
   }
   p {
     text-wrap: pretty;
@@ -113,18 +104,12 @@
 }
 
 @layer components {
-  /* The wonky/soft hero face — used on the one giant headline. */
-  .font-wonk {
-    font-optical-sizing: auto;
-    font-variation-settings: 'SOFT' 0, 'WONK' 1;
-  }
-
-  /* Tabular numerals so ticketing data lines up to the pixel. */
+  /* Tabular numerals so ticketing data lines up. */
   .tnum {
     font-variant-numeric: tabular-nums;
   }
 
-  /* Editorial link: an underline drawn in from the left on hover/active. */
+  /* Subtle underline drawn in from the left — used on nav links. */
   .link-underline {
     position: relative;
   }
@@ -133,7 +118,7 @@
     position: absolute;
     left: 0;
     bottom: -2px;
-    height: 1px;
+    height: 1.5px;
     width: 100%;
     background: currentColor;
     transform: scaleX(0);
@@ -143,69 +128,6 @@
   .link-underline:hover::after,
   .link-underline[data-active='true']::after {
     transform: scaleX(1);
-  }
-
-  /* Rubber-stamp status overlay (SOLD OUT / VOID / CANCELLED / PAST). */
-  .stamp {
-    display: inline-flex;
-    align-items: center;
-    border: 1.5px solid currentColor;
-    border-radius: 2px;
-    padding: 0.18em 0.5em;
-    font-family: 'Spline Sans Mono', ui-monospace, monospace;
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    transform: rotate(-5deg);
-    background: transparent;
-  }
-
-  /* CSS-only barcode for the ticket stub. */
-  .barcode {
-    height: 38px;
-    background-image: repeating-linear-gradient(
-      90deg,
-      currentColor 0,
-      currentColor 1px,
-      transparent 1px,
-      transparent 3px,
-      currentColor 3px,
-      currentColor 5px,
-      transparent 5px,
-      transparent 6px,
-      currentColor 6px,
-      currentColor 7px,
-      transparent 7px,
-      transparent 10px
-    );
-    background-size: 11px 100%;
-  }
-
-  /* Faint print-sheet column rules behind editorial sections. */
-  .col-rules {
-    background-image: repeating-linear-gradient(
-      90deg,
-      transparent 0,
-      transparent calc(8.333% - 1px),
-      rgb(var(--c-line) / 0.55) calc(8.333% - 1px),
-      rgb(var(--c-line) / 0.55) 8.333%
-    );
-  }
-}
-
-@layer utilities {
-  /* A subtle warm paper grain (very low opacity), used sparingly. */
-  .grain {
-    position: relative;
-  }
-  .grain::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    opacity: 0.025;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 }
 
@@ -219,7 +141,7 @@
   }
 }
 
-/* Respect users who prefer less motion: keep opacity, drop transforms/loops. */
+/* Respect users who prefer less motion. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

@@ -1,25 +1,23 @@
 import { forwardRef, type ButtonHTMLAttributes } from 'react';
 import { cn } from '@/lib/cn';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'event';
-export type ButtonSize = 'sm' | 'md';
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
+export type ButtonSize = 'sm' | 'md' | 'lg';
 
 const base =
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-sm font-sans font-semibold transition-all duration-150 ease-editorial select-none disabled:cursor-not-allowed disabled:opacity-50 disabled:pointer-events-none';
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg font-medium transition-colors duration-150 select-none disabled:cursor-not-allowed disabled:opacity-50 disabled:pointer-events-none';
 
 const sizes: Record<ButtonSize, string> = {
-  sm: 'h-9 px-3.5 text-[13px]',
-  md: 'h-11 px-5 text-[15px]',
+  sm: 'h-9 px-4 text-[13px]',
+  md: 'h-10 px-5 text-sm',
+  lg: 'h-12 px-6 text-[15px]',
 };
 
 const variants: Record<ButtonVariant, string> = {
-  primary: 'bg-accent text-paper-2 hover:bg-accent-press hover:-translate-y-px active:translate-y-0',
-  secondary: 'border-[1.5px] border-ink bg-paper-2 text-ink hover:bg-ink hover:text-paper-2',
+  primary: 'bg-accent text-white hover:bg-accent-press',
+  secondary: 'border border-line bg-paper-2 text-ink hover:bg-paper-3',
   ghost: 'text-ink-2 hover:bg-ink/[0.06] hover:text-ink',
   danger: 'border border-danger text-danger hover:bg-danger-wash',
-  // Uses the per-event accent via CSS variables set on an ancestor.
-  event:
-    'bg-[color:var(--ev-accent)] text-[color:var(--ev-accent-ink)] hover:-translate-y-px hover:brightness-[0.96] active:translate-y-0',
 };
 
 export function buttonVariants({

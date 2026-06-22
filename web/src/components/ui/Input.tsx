@@ -2,9 +2,9 @@ import { forwardRef, type InputHTMLAttributes, type SelectHTMLAttributes, type T
 import { cn } from '@/lib/cn';
 
 const controlBase =
-  'w-full rounded-sm border border-line bg-paper-3 px-3.5 text-[15px] text-ink placeholder:text-ink-3 transition-colors duration-150 ' +
-  'focus:border-ink focus:bg-paper-2 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-inset ' +
-  'aria-[invalid=true]:border-danger aria-[invalid=true]:bg-danger-wash disabled:opacity-60';
+  'w-full rounded-lg border border-line bg-paper-2 px-3.5 text-[15px] text-ink placeholder:text-ink-3 transition-colors duration-150 ' +
+  'focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30 ' +
+  'aria-[invalid=true]:border-danger aria-[invalid=true]:focus:ring-danger/30 disabled:opacity-60';
 
 export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(
   function Input({ className, ...props }, ref) {

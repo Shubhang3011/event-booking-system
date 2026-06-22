@@ -21,15 +21,15 @@ import { useReviews } from '@/hooks/useReviews';
 import { toApiError } from '@/lib/api';
 import { accentVars, eventAccent } from '@/lib/eventAccent';
 import { downloadIcs, shareEvent } from '@/lib/eventActions';
-import { longDate, padCount, time } from '@/lib/format';
+import { longDate, time } from '@/lib/format';
 import type { EventItem } from '@/lib/types';
 import { useToast } from '@/providers/ToastProvider';
 
 function Fact({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-baseline justify-between gap-4 border-b border-line py-2.5">
-      <dt className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-3">{label}</dt>
-      <dd className="text-right text-[14px] text-ink">{value}</dd>
+      <dt className="text-[13px] text-ink-3">{label}</dt>
+      <dd className="text-right text-[14px] font-medium text-ink">{value}</dd>
     </div>
   );
 }
@@ -95,18 +95,18 @@ function EventDetail({ event }: { event: EventItem }) {
           <div className="relative aspect-[16/9] w-full overflow-hidden rounded-lg border border-line bg-paper-3">
             <EventImage event={event} />
             <div className="absolute inset-0 bg-gradient-to-t from-black/45 to-transparent" aria-hidden />
-            <span className="absolute left-4 top-4 rounded-full bg-paper-2/90 px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.06em] text-ink backdrop-blur-sm">
+            <span className="absolute left-4 top-4 rounded-full bg-paper-2/90 px-2.5 py-1 text-[11px] font-medium text-ink-2 backdrop-blur-sm">
               {event.category}
             </span>
           </div>
 
-          <h1 className="mt-6 font-display text-display font-medium leading-tight text-ink">{event.title}</h1>
+          <h1 className="mt-6 text-display font-bold leading-tight text-ink">{event.title}</h1>
 
           <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-3">
             {reviews && reviews.summary.count > 0 ? (
               <span className="inline-flex items-center gap-2">
                 <StarRating value={reviews.summary.average} size={16} />
-                <span className="font-mono text-[12px] tabular-nums text-ink-2">
+                <span className="text-[13px] tabular-nums text-ink-2">
                   {reviews.summary.average.toFixed(1)} ({reviews.summary.count})
                 </span>
               </span>
@@ -131,7 +131,7 @@ function EventDetail({ event }: { event: EventItem }) {
 
           {isOwner ? (
             <div className="mt-5 flex flex-wrap items-center gap-3 rounded-md border border-line bg-paper-3/50 px-4 py-3">
-              <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-ink-3">
+              <span className="text-[12px] text-ink-3">
                 Organizer · {event.viewCount} views · {event.bookingCount} booked
               </span>
               <span className="flex-1" />
@@ -161,27 +161,18 @@ function EventDetail({ event }: { event: EventItem }) {
 
         {/* Right: sticky booking panel */}
         <div>
-          <div
-            style={accentVars(accent)}
-            className="sticky top-24 overflow-hidden rounded-md border border-line bg-paper-2 shadow-paper-1"
-          >
-            <div className="h-1 w-full bg-[color:var(--ev-accent)]" aria-hidden />
+          <div className="sticky top-24 overflow-hidden rounded-xl border border-line bg-paper-2 shadow-paper-1">
             <div className="p-6">
               <div className="flex items-center justify-between">
-                <span className="font-display text-h2 font-medium text-ink">Free</span>
+                <span className="text-2xl font-bold text-ink">Free</span>
                 <EventStatusBadge event={event} />
               </div>
               <p className="mt-1 text-[13px] text-ink-3">Reserved seating · no charge</p>
 
-              {/* Departure-board seats counter */}
-              <div className="mt-5 flex items-center gap-3 rounded-sm bg-ink-bg px-3 py-2.5 text-paper-on-ink">
-                <span className="font-mono text-xl tabular-nums">{padCount(event.availableSeats)}</span>
-                <span className="font-mono text-[11px] uppercase leading-tight tracking-[0.12em] text-paper-on-ink/65">
-                  seats
-                  <br />
-                  left of {event.totalSeats}
-                </span>
-              </div>
+              <p className="mt-5 text-sm text-ink-2">
+                <span className="font-semibold tabular-nums text-ink">{event.availableSeats}</span> of {event.totalSeats}{' '}
+                seats left
+              </p>
 
               {/* Capacity bar */}
               <div className="mt-4">
@@ -193,38 +184,33 @@ function EventDetail({ event }: { event: EventItem }) {
                   aria-valuemax={100}
                   aria-label="Percent booked"
                 >
-                  <div className="h-full rounded-full bg-[color:var(--ev-accent)]" style={{ width: `${pctBooked}%` }} />
+                  <div className="h-full rounded-full bg-accent" style={{ width: `${pctBooked}%` }} />
                 </div>
-                <p className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.08em] text-ink-3">{pctBooked}% booked</p>
+                <p className="mt-1.5 text-[12px] tabular-nums text-ink-3">{pctBooked}% booked</p>
               </div>
 
               {bookable ? (
                 <>
                   <div className="mt-6">
-                    <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-2">How many seats?</p>
+                    <p className="mb-2 text-[13px] font-medium text-ink-2">How many seats?</p>
                     <SeatStepper value={seats} onChange={setSeats} min={1} max={max} />
                   </div>
 
                   <div className="mt-6">
                     {isAuthenticated ? (
-                      <Button
-                        variant="event"
-                        fullWidth
-                        style={accentVars(accent)}
-                        onClick={() => setDialogOpen(true)}
-                      >
+                      <Button variant="primary" size="lg" fullWidth onClick={() => setDialogOpen(true)}>
                         Reserve {seats} seat{seats === 1 ? '' : 's'}
                       </Button>
                     ) : (
                       <Link to="/login" state={{ from: `/events/${event.id}` }} className="block">
-                        <Button variant="event" fullWidth style={accentVars(accent)}>
+                        <Button variant="primary" size="lg" fullWidth>
                           Sign in to reserve
                         </Button>
                       </Link>
                     )}
                   </div>
 
-                  <ul className="mt-4 space-y-1 font-mono text-[11px] uppercase tracking-[0.08em] text-ink-3">
+                  <ul className="mt-4 space-y-1 text-[13px] text-ink-2">
                     <li>· Instant confirmation</li>
                     <li>· Free cancellation any time</li>
                   </ul>
@@ -249,7 +235,7 @@ function EventDetail({ event }: { event: EventItem }) {
 
       {moreLikeThis.length > 0 ? (
         <section className="mt-16">
-          <h2 className="border-b border-ink pb-3 font-display text-h2 font-medium text-ink">More like this</h2>
+          <h2 className="border-b border-line pb-3 text-h2 font-semibold text-ink">More like this</h2>
           <ol>
             {moreLikeThis.map((e, i) => (
               <RunningOrderRow key={e.id} event={e} index={i} />
@@ -310,8 +296,8 @@ function NotFound() {
   return (
     <Container className="grid min-h-[50vh] place-items-center py-20 text-center">
       <div>
-        <p className="font-mono text-[12px] uppercase tracking-[0.14em] text-ink-3">Not found</p>
-        <h1 className="mt-3 font-display text-h1 font-medium text-ink">We couldn't find that event</h1>
+        <p className="text-[12px] text-ink-3">Not found</p>
+        <h1 className="mt-3 text-h1 font-semibold text-ink">We couldn't find that event</h1>
         <p className="mt-3 text-ink-2">It may have been removed or the link is wrong.</p>
         <Link to="/events" className="mt-6 inline-block">
           <Button>Browse events</Button>

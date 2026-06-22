@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 const BASE = 'Linemate';
-const DEFAULT = `${BASE} — Box Office`;
+const DEFAULT = `${BASE} — Discover & book events`;
 
 /** Set the document title for a page (e.g. "Events · Linemate"). */
 export function useDocumentTitle(title?: string): void {

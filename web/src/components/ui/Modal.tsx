@@ -83,7 +83,7 @@ export function Modal({ open, onClose, title, children, footer, className }: Mod
         )}
       >
         <div className="flex items-center justify-between gap-4 border-b border-line px-5 py-4">
-          <h2 id={titleId} className="font-display text-h2 text-ink">
+          <h2 id={titleId} className="text-h2 text-ink">
             {title}
           </h2>
           <button

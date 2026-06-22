@@ -2,9 +2,9 @@ import { format, formatDistanceToNowStrict, isPast } from 'date-fns';
 
 const d = (value: string | Date): Date => (value instanceof Date ? value : new Date(value));
 
-/** "FRI · 21 JUN · 20:00" — the masthead dateline. */
+/** "Sat, 21 Jun · 8:00 PM" — sentence-case date for cards/rows. */
 export function dateline(value: string | Date): string {
-  return format(d(value), 'EEE · dd MMM · HH:mm').toUpperCase();
+  return format(d(value), 'EEE, d MMM · h:mm a');
 }
 
 /** Components of the date-rail block. */

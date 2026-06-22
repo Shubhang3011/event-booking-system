@@ -57,7 +57,7 @@ export function LoginPage() {
     >
       <div className="mx-auto w-full max-w-sm">
         <AuthSwitch active="login" />
-        <h2 className="mt-6 font-display text-h1 font-medium text-ink">Good to see you</h2>
+        <h2 className="mt-6 text-h1 font-semibold text-ink">Good to see you</h2>
         <p className="mt-1 text-[14px] text-ink-2">Sign in to manage your tickets.</p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4" noValidate>
@@ -89,7 +89,7 @@ export function LoginPage() {
         <button
           type="button"
           onClick={useDemo}
-          className="mt-3 w-full rounded-sm border border-dashed border-line-strong py-2.5 font-mono text-[12px] uppercase tracking-[0.08em] text-ink-2 transition-colors hover:border-ink hover:text-ink"
+          className="mt-3 w-full rounded-sm border border-dashed border-line-strong py-2.5 text-[12px] text-ink-2 transition-colors hover:border-ink hover:text-ink"
         >
           Use demo credentials
         </button>

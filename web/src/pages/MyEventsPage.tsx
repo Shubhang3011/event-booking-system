@@ -15,7 +15,7 @@ export function MyEventsPage() {
     <Container className="py-12">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="font-display text-h1 font-medium text-ink">My events</h1>
+          <h1 className="text-h1 font-semibold text-ink">My events</h1>
           <p className="mt-1 text-ink-2">Events you've created. Open one to edit or delete it.</p>
         </div>
         <Link to="/events/new">
@@ -34,7 +34,7 @@ export function MyEventsPage() {
           </div>
         ) : !events || events.length === 0 ? (
           <div className="flex flex-col items-center gap-5 rounded-md border border-dashed border-line-strong bg-paper-2 px-6 py-16 text-center">
-            <p className="font-display text-[1.35rem] italic text-ink-2">You haven't created any events yet.</p>
+            <p className="text-[1.35rem] text-ink-2">You haven't created any events yet.</p>
             <Link to="/events/new">
               <Button>Create your first event</Button>
             </Link>
@@ -44,7 +44,7 @@ export function MyEventsPage() {
             {events.map((event) => (
               <div key={event.id} className="space-y-2">
                 <EventCard event={event} />
-                <div className="flex items-center justify-between gap-2 px-1 font-mono text-[11px] uppercase tracking-[0.06em] text-ink-3">
+                <div className="flex items-center justify-between gap-2 px-1 text-[11px] text-ink-3">
                   <span className="tabular-nums">
                     {event.viewCount} views · {event.bookingCount} booked
                   </span>

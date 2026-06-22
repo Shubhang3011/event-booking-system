@@ -7,7 +7,7 @@ import { useToast } from '@/providers/ToastProvider';
 function FooterCol({ title, links }: { title: string; links: [label: string, to: string][] }) {
   return (
     <div>
-      <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-3">{title}</p>
+      <p className="text-[11px] text-ink-3">{title}</p>
       <ul className="mt-3 space-y-2">
         {links.map(([label, to]) => (
           <li key={label}>
@@ -65,7 +65,7 @@ export function Footer() {
       <div className="mx-auto max-w-content px-6 md:px-10 lg:px-16">
         <div className="flex flex-col gap-6 border-b border-line py-12 md:flex-row md:items-end md:justify-between">
           <div>
-            <h2 className="font-display text-h2 font-medium text-ink">Never miss a night out.</h2>
+            <h2 className="text-h2 font-semibold text-ink">Never miss a night out.</h2>
             <p className="mt-2 max-w-[40ch] text-[14px] text-ink-2">
               The best new events in your city, about once a week. No spam.
             </p>
@@ -79,9 +79,9 @@ export function Footer() {
               <span className="grid h-7 w-7 place-items-center rounded-sm bg-ink">
                 <span className="h-3 w-3 rounded-full bg-accent" />
               </span>
-              <span className="font-display text-2xl font-semibold tracking-tight text-ink">Linemate</span>
+              <span className="text-2xl font-semibold tracking-tight text-ink">Linemate</span>
             </div>
-            <p className="mt-3 max-w-[34ch] font-display text-[1.1rem] italic text-ink-2">
+            <p className="mt-3 max-w-[34ch] text-[1.1rem] text-ink-2">
               An editorial box-office. Go out more.
             </p>
           </div>
@@ -91,10 +91,10 @@ export function Footer() {
         </div>
 
         <div className="flex flex-col gap-3 border-t border-dashed border-line-strong py-6 md:flex-row md:items-center md:justify-between">
-          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-3">
+          <p className="text-[11px] text-ink-3">
             © 2026 Linemate · Made for the curious
           </p>
-          <div className="flex items-center gap-4 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-3">
+          <div className="flex items-center gap-4 text-[11px] text-ink-3">
             <Link to="/terms" className="transition-colors hover:text-ink">
               Terms
             </Link>

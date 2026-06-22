@@ -20,7 +20,7 @@ function SettingsSection({ title, description, children }: { title: string; desc
   return (
     <section className="grid gap-6 border-t border-line py-10 md:grid-cols-[1fr_1.6fr]">
       <div>
-        <h2 className="font-display text-h2 font-medium text-ink">{title}</h2>
+        <h2 className="text-h2 font-semibold text-ink">{title}</h2>
         <p className="mt-1 max-w-[36ch] text-[14px] text-ink-2">{description}</p>
       </div>
       <div className="rounded-md border border-line bg-paper-2 p-6">{children}</div>
@@ -38,7 +38,7 @@ function Appearance() {
   const { theme, setTheme } = useTheme();
   return (
     <div>
-      <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-2">Theme</p>
+      <p className="text-[11px] text-ink-2">Theme</p>
       <div className="mt-3 grid grid-cols-3 gap-3">
         {THEME_OPTIONS.map(({ value, label, icon: Icon }) => (
           <button
@@ -161,7 +161,7 @@ export function SettingsPage() {
   useDocumentTitle('Settings');
   return (
     <Container className="py-12">
-      <h1 className="font-display text-h1 font-medium text-ink">Settings</h1>
+      <h1 className="text-h1 font-semibold text-ink">Settings</h1>
       <p className="mt-1 text-ink-2">Manage your appearance and account.</p>
 
       <div className="mt-6">

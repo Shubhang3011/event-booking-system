@@ -1,46 +1,36 @@
-import { ArrowRight, Star } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/cn';
-import { accentVars, eventAccent } from '@/lib/eventAccent';
 import { dateline, shortDate, time } from '@/lib/format';
 import type { EventItem } from '@/lib/types';
 import { EventImage } from './EventImage';
 import { EventStatusBadge } from './EventStatusBadge';
+import { StarRating } from '@/components/ui/StarRating';
 
-/**
- * The signature layout: a real <li><a> on the events <ol>. A numbered, ruled
- * lineup (festival-timetable logic) instead of a grid of identical cards.
- */
-export function RunningOrderRow({ event, index }: { event: EventItem; index: number }) {
+/** Dense list row — thumbnail, date, title, venue, rating, status. */
+export function RunningOrderRow({ event }: { event: EventItem; index?: number }) {
   const dimmed = event.isPast || event.isSoldOut;
 
   return (
-    <li style={accentVars(eventAccent(event.id))} className="group border-b border-line">
+    <li className="group border-b border-line last:border-b-0">
       <Link
         to={`/events/${event.id}`}
         className={cn(
-          'grid grid-cols-[2.25rem_1fr_auto] items-center gap-4 py-5 md:grid-cols-[3rem_7rem_1fr_11rem_auto]',
+          'grid grid-cols-[1fr_auto] items-center gap-4 py-4 md:grid-cols-[7rem_1fr_11rem_auto]',
           dimmed && 'opacity-70',
         )}
       >
-        <span className="font-mono text-[13px] tabular-nums text-ink-3 transition-colors group-hover:text-[color:var(--ev-accent)]">
-          {String(index + 1).padStart(2, '0')}
-        </span>
         <span className="hidden flex-col leading-tight md:flex">
-          <span className="font-mono text-[12px] uppercase tracking-[0.03em] text-ink-2">{shortDate(event.date)}</span>
-          <span className="font-mono text-[12px] tabular-nums text-ink-3">{time(event.date)}</span>
+          <span className="text-[13px] font-medium text-ink">{shortDate(event.date)}</span>
+          <span className="text-[13px] tabular-nums text-ink-3">{time(event.date)}</span>
         </span>
         <span className="flex min-w-0 items-center gap-3">
-          <span className="hidden h-12 w-16 shrink-0 overflow-hidden rounded-md bg-paper-3 sm:block">
+          <span className="hidden h-12 w-16 shrink-0 overflow-hidden rounded-lg bg-paper-3 sm:block">
             <EventImage event={event} />
           </span>
           <span className="min-w-0">
-            <span className="block truncate text-[1.05rem] font-semibold leading-tight text-ink transition-transform duration-150 group-hover:translate-x-0.5">
-              {event.title}
-            </span>
-            <span className="mt-0.5 block font-mono text-[11px] uppercase tracking-[0.08em] text-ink-3 md:hidden">
-              {dateline(event.date)}
-            </span>
+            <span className="block truncate text-base font-semibold leading-tight text-ink">{event.title}</span>
+            <span className="mt-0.5 block text-[12px] text-ink-3 md:hidden">{dateline(event.date)}</span>
           </span>
         </span>
         <span className="hidden truncate text-[13px] text-ink-3 md:block">
@@ -48,14 +38,14 @@ export function RunningOrderRow({ event, index }: { event: EventItem; index: num
         </span>
         <span className="flex items-center justify-end gap-3">
           {event.ratingCount > 0 ? (
-            <span className="hidden items-center gap-1 font-mono text-[12px] tabular-nums text-ink-2 sm:flex">
-              <Star className="h-3.5 w-3.5 fill-accent text-accent" strokeWidth={1.5} />
+            <span className="hidden items-center gap-1 text-[13px] tabular-nums text-ink-2 sm:flex">
+              <StarRating value={event.ratingAverage} size={13} />
               {event.ratingAverage.toFixed(1)}
             </span>
           ) : null}
           <EventStatusBadge event={event} />
           <ArrowRight
-            className="h-4 w-4 text-ink-3 transition-all duration-150 group-hover:translate-x-1 group-hover:text-[color:var(--ev-accent)]"
+            className="h-4 w-4 text-ink-3 transition-all duration-150 group-hover:translate-x-1 group-hover:text-ink"
             strokeWidth={1.75}
           />
         </span>

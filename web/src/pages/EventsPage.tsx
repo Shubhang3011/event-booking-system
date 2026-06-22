@@ -86,7 +86,7 @@ export function EventsPage() {
       {/* Sticky filter sub-bar */}
       <div className="sticky top-16 z-30 border-b border-line bg-paper/85 backdrop-blur-md">
         <Container className="flex flex-wrap items-center gap-x-6 gap-y-3 py-3">
-          <p className="font-mono text-[12px] uppercase tracking-[0.1em] text-ink-3">
+          <p className="text-[12px] text-ink-3">
             <span className="tabular-nums text-ink">{total}</span> {total === 1 ? 'event' : 'events'}
           </p>
 
@@ -104,7 +104,7 @@ export function EventsPage() {
 
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <label htmlFor="sort" className="hidden font-mono text-[11px] uppercase tracking-[0.1em] text-ink-3 sm:block">
+              <label htmlFor="sort" className="hidden text-[11px] text-ink-3 sm:block">
                 Sort
               </label>
               <div className="relative">
@@ -212,7 +212,7 @@ export function EventsPage() {
 function EmptyState({ hasFilters, onClear }: { hasFilters: boolean; onClear: () => void }) {
   return (
     <div className="mx-auto flex max-w-md flex-col items-center gap-4 rounded-md border border-dashed border-line-strong bg-paper-2 px-6 py-16 text-center">
-      <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-ink-3">
+      <p className="text-[12px] text-ink-3">
         {hasFilters ? 'No events match. Loosen the filters.' : 'No events yet.'}
       </p>
       {hasFilters ? (
@@ -227,7 +227,7 @@ function EmptyState({ hasFilters, onClear }: { hasFilters: boolean; onClear: () 
 function ErrorState({ onRetry }: { onRetry: () => void }) {
   return (
     <div className="mx-auto flex max-w-md flex-col items-center gap-4 rounded-md border border-danger/30 bg-danger-wash/40 px-6 py-16 text-center">
-      <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-danger">Could not load events</p>
+      <p className="text-[12px] text-danger">Could not load events</p>
       <Button variant="secondary" size="sm" onClick={onRetry}>
         Try again
       </Button>

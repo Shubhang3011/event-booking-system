@@ -73,11 +73,11 @@ export function ReviewsSection({ eventId }: { eventId: string }) {
   return (
     <section className="mt-16">
       <div className="flex items-center justify-between gap-4 border-b border-ink pb-3">
-        <h2 className="font-display text-h2 font-medium text-ink">Reviews</h2>
+        <h2 className="text-h2 font-semibold text-ink">Reviews</h2>
         {data && data.summary.count > 0 ? (
           <div className="flex items-center gap-2">
             <StarRating value={data.summary.average} />
-            <span className="font-mono text-[13px] tabular-nums text-ink-2">
+            <span className="text-[13px] tabular-nums text-ink-2">
               {data.summary.average.toFixed(1)} · {data.summary.count}
             </span>
           </div>
@@ -86,7 +86,7 @@ export function ReviewsSection({ eventId }: { eventId: string }) {
 
       {isAuthenticated ? (
         <form onSubmit={submit} className="mt-6 rounded-md border border-line bg-paper-2 p-5">
-          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-2">
+          <p className="text-[11px] text-ink-2">
             {myReview ? 'Your review' : 'Leave a review'}
           </p>
           <div className="mt-3">
@@ -143,7 +143,7 @@ export function ReviewsSection({ eventId }: { eventId: string }) {
                       </span>
                       <div>
                         <p className="text-[14px] font-semibold text-ink">{r.user}</p>
-                        <p className="font-mono text-[11px] text-ink-3">{format(new Date(r.createdAt), 'd MMM yyyy')}</p>
+                        <p className="text-[11px] text-ink-3">{format(new Date(r.createdAt), 'd MMM yyyy')}</p>
                       </div>
                     </div>
                     <StarRating value={r.rating} size={15} />
@@ -166,7 +166,7 @@ export function ReviewsSection({ eventId }: { eventId: string }) {
               type="button"
               onClick={() => setShowAll((s) => !s)}
               aria-expanded={showAll}
-              className="mt-5 inline-flex items-center gap-1.5 font-mono text-[12px] uppercase tracking-[0.08em] text-ink-2 transition-colors hover:text-ink"
+              className="mt-5 inline-flex items-center gap-1.5 text-[12px] text-ink-2 transition-colors hover:text-ink"
             >
               {showAll ? 'Show fewer' : `Show all ${reviews.length} reviews`}
               <ChevronDown className={cn('h-4 w-4 transition-transform', showAll && 'rotate-180')} strokeWidth={1.75} />

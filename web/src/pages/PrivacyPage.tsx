@@ -15,13 +15,13 @@ export function PrivacyPage() {
   return (
     <Container className="py-12">
       <div className="mx-auto max-w-3xl">
-        <p className="font-mono text-[12px] uppercase tracking-[0.16em] text-ink-3">Legal</p>
-        <h1 className="mt-3 font-display text-h1 font-medium text-ink">Privacy Policy</h1>
+        <p className="text-[12px] text-ink-3">Legal</p>
+        <h1 className="mt-3 text-h1 font-semibold text-ink">Privacy Policy</h1>
         <p className="mt-2 text-[13px] text-ink-3">Last updated: June 2026</p>
         <div className="mt-8 space-y-8">
           {SECTIONS.map(([title, body]) => (
             <section key={title}>
-              <h2 className="font-display text-[1.3rem] font-medium text-ink">{title}</h2>
+              <h2 className="text-[1.3rem] font-medium text-ink">{title}</h2>
               <p className="mt-2 max-w-prose text-[15px] leading-relaxed text-ink-2">{body}</p>
             </section>
           ))}
