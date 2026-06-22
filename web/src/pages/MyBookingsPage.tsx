@@ -85,7 +85,7 @@ export function MyBookingsPage() {
         {isError ? (
           <p className="text-[13px] text-danger">Could not load your bookings. Please refresh.</p>
         ) : isLoading ? (
-          <div className="grid gap-4 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             {Array.from({ length: 2 }).map((_, i) => (
               <Skeleton key={i} className="h-36 w-full rounded-md" />
             ))}
@@ -93,7 +93,7 @@ export function MyBookingsPage() {
         ) : list.length === 0 ? (
           <EmptyTickets tab={tab} />
         ) : (
-          <div className="grid gap-4 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             {list.map((booking) => (
               <BookingCard
                 key={booking.id}
