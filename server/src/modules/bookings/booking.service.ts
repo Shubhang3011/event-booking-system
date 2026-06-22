@@ -1,11 +1,34 @@
+import { isTest } from '../../config/env';
 import { AppError } from '../../lib/AppError';
 import { generateBookingCode } from '../../lib/code';
+import { sendBookingConfirmation } from '../../lib/email';
 import { Event } from '../events/event.model';
+import { User } from '../users/user.model';
 import { Booking, type BookingDoc } from './booking.model';
 import type { CreateBookingInput, ListBookingsQuery } from './booking.schema';
 
 const isDuplicateKey = (err: unknown): boolean =>
   typeof err === 'object' && err !== null && (err as { code?: number }).code === 11000;
+
+/** Fire-and-forget booking confirmation email (errors never affect the booking). */
+async function emailConfirmation(userId: string, booking: BookingDoc): Promise<void> {
+  try {
+    const user = await User.findById(userId).lean();
+    if (!user) return;
+    const ev = booking.event as unknown as { title: string; date: Date; venue: string; city: string };
+    await sendBookingConfirmation({
+      to: user.email,
+      name: user.name,
+      eventTitle: ev.title,
+      when: new Intl.DateTimeFormat('en-GB', { dateStyle: 'full', timeStyle: 'short' }).format(new Date(ev.date)),
+      venue: `${ev.venue}, ${ev.city}`,
+      seats: booking.seats,
+      code: booking.bookingCode,
+    });
+  } catch {
+    /* swallow */
+  }
+}
 
 /**
  * Reserve seats for an event.
@@ -39,7 +62,7 @@ export async function createBooking(
   // Authoritative, race-safe reservation.
   const reserved = await Event.findOneAndUpdate(
     { _id: eventId, availableSeats: { $gte: seats }, date: { $gt: new Date() } },
-    { $inc: { availableSeats: -seats } },
+    { $inc: { availableSeats: -seats, bookingCount: 1 } },
     { new: true },
   );
   if (!reserved) {
@@ -56,11 +79,13 @@ export async function createBooking(
         seats,
         bookingCode: generateBookingCode(),
       });
-      return booking.populate('event');
+      const populated = await booking.populate('event');
+      if (!isTest) void emailConfirmation(userId, populated);
+      return populated;
     } catch (err) {
       if (isDuplicateKey(err) && attempt < 2) continue; // regenerate code and retry
       // eslint-disable-next-line no-await-in-loop
-      await Event.updateOne({ _id: eventId }, { $inc: { availableSeats: seats } });
+      await Event.updateOne({ _id: eventId }, { $inc: { availableSeats: seats, bookingCount: -1 } });
       throw err;
     }
   }
@@ -108,6 +133,7 @@ export async function cancelBooking(userId: string, bookingId: string): Promise<
         availableSeats: {
           $min: [{ $add: ['$availableSeats', booking.seats] }, '$totalSeats'],
         },
+        bookingCount: { $max: [{ $subtract: ['$bookingCount', 1] }, 0] },
       },
     },
   ]);

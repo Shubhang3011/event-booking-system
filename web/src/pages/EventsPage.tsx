@@ -20,6 +20,7 @@ type View = 'list' | 'grid';
 
 const SORTS: { value: SortKey; label: string }[] = [
   { value: 'date', label: 'Date — soonest' },
+  { value: '-trending', label: 'Trending' },
   { value: '-rating', label: 'Top rated' },
   { value: 'newest', label: 'Recently added' },
   { value: '-seats', label: 'Most seats left' },
@@ -38,7 +39,7 @@ export function EventsPage() {
   const category = (params.get('category') as EventCategory | null) ?? undefined;
   const when = (params.get('when') as When | null) ?? 'upcoming';
   const sort = (params.get('sort') as SortKey | null) ?? 'date';
-  const view = (params.get('view') as View | null) ?? 'list';
+  const view = (params.get('view') as View | null) ?? 'grid';
   const q = params.get('q') ?? '';
 
   const update = useCallback(

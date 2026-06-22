@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '@/auth/AuthContext';
 import { BookingDialog } from '@/components/bookings/BookingDialog';
-import { EventCover } from '@/components/events/EventCover';
+import { EventImage } from '@/components/events/EventImage';
 import { EventStatusBadge } from '@/components/events/EventStatusBadge';
 import { RunningOrderRow } from '@/components/events/RunningOrderRow';
 import { SaveButton } from '@/components/events/SaveButton';
@@ -92,12 +92,15 @@ function EventDetail({ event }: { event: EventItem }) {
       <div className="mt-6 grid gap-10 lg:grid-cols-[1.6fr_1fr]">
         {/* Left: editorial */}
         <div style={accentVars(accent)}>
-          <EventCover event={event} className="aspect-[16/9] w-full" showTitle={false} />
+          <div className="relative aspect-[16/9] w-full overflow-hidden rounded-lg border border-line bg-paper-3">
+            <EventImage event={event} />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/45 to-transparent" aria-hidden />
+            <span className="absolute left-4 top-4 rounded-full bg-paper-2/90 px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.06em] text-ink backdrop-blur-sm">
+              {event.category}
+            </span>
+          </div>
 
-          <p className="mt-6 font-mono text-[12px] uppercase tracking-[0.14em] text-[color:var(--ev-accent)]">
-            {event.category}
-          </p>
-          <h1 className="mt-2 font-display text-display font-medium leading-tight text-ink">{event.title}</h1>
+          <h1 className="mt-6 font-display text-display font-medium leading-tight text-ink">{event.title}</h1>
 
           <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-3">
             {reviews && reviews.summary.count > 0 ? (
@@ -128,7 +131,9 @@ function EventDetail({ event }: { event: EventItem }) {
 
           {isOwner ? (
             <div className="mt-5 flex flex-wrap items-center gap-3 rounded-md border border-line bg-paper-3/50 px-4 py-3">
-              <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-ink-3">You're the organizer</span>
+              <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-ink-3">
+                Organizer · {event.viewCount} views · {event.bookingCount} booked
+              </span>
               <span className="flex-1" />
               <Link to={`/events/${event.id}/edit`}>
                 <Button variant="secondary" size="sm">

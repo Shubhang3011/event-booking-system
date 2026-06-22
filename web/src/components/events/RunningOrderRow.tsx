@@ -4,6 +4,7 @@ import { cn } from '@/lib/cn';
 import { accentVars, eventAccent } from '@/lib/eventAccent';
 import { dateline, shortDate, time } from '@/lib/format';
 import type { EventItem } from '@/lib/types';
+import { EventImage } from './EventImage';
 import { EventStatusBadge } from './EventStatusBadge';
 
 /**
@@ -29,12 +30,17 @@ export function RunningOrderRow({ event, index }: { event: EventItem; index: num
           <span className="font-mono text-[12px] uppercase tracking-[0.03em] text-ink-2">{shortDate(event.date)}</span>
           <span className="font-mono text-[12px] tabular-nums text-ink-3">{time(event.date)}</span>
         </span>
-        <span className="min-w-0">
-          <span className="block truncate font-display text-[1.4rem] font-medium leading-tight text-ink transition-transform duration-150 group-hover:translate-x-1">
-            {event.title}
+        <span className="flex min-w-0 items-center gap-3">
+          <span className="hidden h-12 w-16 shrink-0 overflow-hidden rounded-md bg-paper-3 sm:block">
+            <EventImage event={event} />
           </span>
-          <span className="mt-0.5 block font-mono text-[11px] uppercase tracking-[0.08em] text-ink-3 md:hidden">
-            {dateline(event.date)}
+          <span className="min-w-0">
+            <span className="block truncate text-[1.05rem] font-semibold leading-tight text-ink transition-transform duration-150 group-hover:translate-x-0.5">
+              {event.title}
+            </span>
+            <span className="mt-0.5 block font-mono text-[11px] uppercase tracking-[0.08em] text-ink-3 md:hidden">
+              {dateline(event.date)}
+            </span>
           </span>
         </span>
         <span className="hidden truncate text-[13px] text-ink-3 md:block">

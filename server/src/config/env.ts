@@ -21,6 +21,13 @@ const envSchema = z.object({
   // Absolute path to the built frontend (web/dist). When set, the API also
   // serves the SPA — enabling a single-service deployment.
   CLIENT_DIST: z.string().optional(),
+  // Optional SMTP for booking confirmation emails. If unset, emails are logged
+  // instead of sent (the feature still works end-to-end, just no real delivery).
+  SMTP_HOST: z.string().optional(),
+  SMTP_PORT: z.coerce.number().int().default(587),
+  SMTP_USER: z.string().optional(),
+  SMTP_PASS: z.string().optional(),
+  EMAIL_FROM: z.string().optional(),
   BCRYPT_ROUNDS: z.coerce.number().int().min(4).max(15).default(12),
 });
 

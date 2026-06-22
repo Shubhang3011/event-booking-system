@@ -27,6 +27,9 @@ export interface EventDoc extends Document {
   availableSeats: number;
   ratingAverage: number;
   ratingCount: number;
+  imageUrl: string;
+  bookingCount: number;
+  viewCount: number;
   createdBy: Types.ObjectId | null;
   createdAt: Date;
   updatedAt: Date;
@@ -59,6 +62,9 @@ const eventSchema = new Schema<EventDoc>(
     },
     ratingAverage: { type: Number, default: 0 },
     ratingCount: { type: Number, default: 0 },
+    imageUrl: { type: String, default: '' },
+    bookingCount: { type: Number, default: 0 },
+    viewCount: { type: Number, default: 0 },
     createdBy: { type: Schema.Types.ObjectId, ref: 'User', default: null },
   },
   {

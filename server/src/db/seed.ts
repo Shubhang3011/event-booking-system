@@ -193,6 +193,25 @@ const events: EventSeed[] = [
   },
 ];
 
+const img = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1200&q=70`;
+
+// Cover images (Unsplash), aligned to the events array above by index.
+const EVENT_IMAGES = [
+  img('photo-1511192336575-5a79af67a629'), // jazz
+  img('photo-1556761175-5973dc0f32e7'), // pitch night
+  img('photo-1470229722913-7c0e2dbbafd3'), // concert crowd
+  img('photo-1527224538127-2104bb71c51b'), // comedy mic
+  img('photo-1506126613408-eca07ce68773'), // yoga
+  img('photo-1414235077428-338989a2e8c0'), // coastal feast
+  img('photo-1503095396549-807759245b35'), // theatre
+  img('photo-1489599849927-2ee91cede3ba'), // cinema
+  img('photo-1531058020387-3be344556be6'), // art gallery
+  img('photo-1452860606245-08befc0ff44b'), // design / print
+  img('photo-1540575467063-178a50c2df87'), // conference
+  img('photo-1452626038306-9aae5e071dd3'), // running
+  img('photo-1459749411175-04bf5292ceea'), // festival
+];
+
 // Sample reviewers so events show real ratings out of the box.
 const REVIEWERS = [
   { name: 'Aarav Sharma', email: 'aarav@linemate.events' },
@@ -241,7 +260,15 @@ export async function seedDatabase({ reset = false, quiet = false }: SeedOptions
   let created: Awaited<ReturnType<typeof Event.insertMany>> = [];
   const existingCount = await Event.estimatedDocumentCount();
   if (existingCount === 0) {
-    created = await Event.insertMany(events);
+    created = await Event.insertMany(
+      events.map((e, i) => ({
+        ...e,
+        imageUrl: EVENT_IMAGES[i] ?? '',
+        // Seed some popularity so "trending" and analytics have data.
+        bookingCount: e.totalSeats - e.availableSeats,
+        viewCount: Math.round((e.totalSeats - e.availableSeats) * 3.5 + 40),
+      })),
+    );
   } else if (!reset) {
     if (!quiet) logger.info('Events already present — skipping event seed.');
   }

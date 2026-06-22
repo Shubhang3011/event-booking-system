@@ -18,6 +18,7 @@ const SORT_MAP: Record<ListEventsQuery['sort'], Record<string, SortOrder>> = {
   '-seats': { availableSeats: -1 },
   newest: { createdAt: -1 },
   '-rating': { ratingAverage: -1, ratingCount: -1 },
+  '-trending': { bookingCount: -1, viewCount: -1 },
 };
 
 export async function listEvents(
@@ -46,7 +47,8 @@ export async function listEvents(
 }
 
 export async function getEventById(id: string): Promise<EventDoc> {
-  const event = await Event.findById(id);
+  // Count the view (used for organizer analytics).
+  const event = await Event.findByIdAndUpdate(id, { $inc: { viewCount: 1 } }, { new: true });
   if (!event) {
     throw AppError.notFound('Event not found');
   }

@@ -1,150 +1,144 @@
-import { ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { RunningOrderRow } from '@/components/events/RunningOrderRow';
-import { RunningOrderSkeleton } from '@/components/events/EventSkeletons';
+import { ArrowRight, Search } from 'lucide-react';
+import { useState, type FormEvent } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { EventCard } from '@/components/events/EventCard';
+import { EventCardSkeleton } from '@/components/events/EventSkeletons';
 import { Container } from '@/components/layout/Container';
-import { TicketStub } from '@/components/bookings/TicketStub';
 import { Button } from '@/components/ui/Button';
 import { useEvents } from '@/hooks/useEvents';
-import { accentVars } from '@/lib/eventAccent';
+import { categoryImage } from '@/lib/coverImage';
 import { EVENT_CATEGORIES } from '@/lib/types';
 
-const STEPS = [
-  ['01', 'Browse the running order', "Scan tonight's lineup or filter by city, date and mood — no endless scroll."],
-  ['02', 'Reserve your seats', 'Choose how many seats and confirm. Inventory updates instantly, so it never oversells.'],
-  ['03', 'Keep your stub', 'Your ticket lands in My Tickets with a code and barcode. Cancel any time and the seats go back.'],
-] as const;
+const POPULAR = ['Music', 'Technology', 'Food & Drink', 'Arts', 'Wellness'] as const;
+
+function HeroSearch() {
+  const navigate = useNavigate();
+  const [q, setQ] = useState('');
+  const submit = (e: FormEvent) => {
+    e.preventDefault();
+    navigate(q.trim() ? `/events?q=${encodeURIComponent(q.trim())}` : '/events');
+  };
+  return (
+    <form onSubmit={submit} className="mt-8 flex w-full max-w-xl gap-2">
+      <div className="relative flex-1">
+        <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-ink-3" strokeWidth={1.75} />
+        <input
+          type="search"
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="Search events, venues, cities…"
+          aria-label="Search events"
+          className="h-12 w-full rounded-lg border border-line bg-paper-2 pl-12 pr-4 text-[15px] text-ink shadow-paper-1 placeholder:text-ink-3 focus:border-ink focus:outline-none focus:ring-2 focus:ring-accent focus:ring-inset"
+        />
+      </div>
+      <Button type="submit" size="md" className="h-12 px-6">
+        Search
+      </Button>
+    </form>
+  );
+}
+
+function CategoryTiles() {
+  return (
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-3">
+      {EVENT_CATEGORIES.map((c) => (
+        <Link
+          key={c}
+          to={`/events?category=${encodeURIComponent(c)}`}
+          className="group relative aspect-[5/2] overflow-hidden rounded-lg border border-line"
+        >
+          <img
+            src={categoryImage(c)}
+            alt=""
+            loading="lazy"
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/10" aria-hidden />
+          <span className="absolute bottom-3 left-4 text-[1.05rem] font-semibold text-white">{c}</span>
+        </Link>
+      ))}
+    </div>
+  );
+}
 
 export function LandingPage() {
-  const { data, isLoading } = useEvents({ when: 'upcoming', sort: 'date', limit: 6 });
-  const featured = data?.data ?? [];
-  const { data: ratedData } = useEvents({ when: 'upcoming', sort: '-rating', limit: 6 });
-  const topRated = (ratedData?.data ?? []).filter((e) => e.ratingCount > 0).slice(0, 5);
+  const { data: trending, isLoading: loadingTrending } = useEvents({ when: 'upcoming', sort: '-trending', limit: 6 });
+  const { data: upcoming, isLoading: loadingUpcoming } = useEvents({ when: 'upcoming', sort: 'date', limit: 8 });
+
+  const trendingEvents = trending?.data ?? [];
+  const upcomingEvents = upcoming?.data ?? [];
 
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden border-b border-line">
-        <div className="col-rules absolute inset-0 opacity-60" aria-hidden />
-        <Container className="relative grid items-center gap-10 py-16 md:grid-cols-[1.15fr_0.85fr] md:py-24">
-          <div>
-            <p className="font-mono text-[12px] uppercase tracking-[0.16em] text-ink-3">
-              Linemate · Cultural events · India
-            </p>
-            <h1 className="font-wonk mt-5 font-display text-display-xl font-medium text-ink">
-              Go out <span className="italic text-accent">more.</span>
-            </h1>
-            <p className="mt-6 max-w-[46ch] text-body-lg text-ink-2">
-              A box-office for the curious — gigs, talks, long dinners and late nights, with a seat saved in two taps.
-            </p>
-            <div className="mt-8 flex items-center gap-5">
-              <Link to="/events">
-                <Button size="md">Browse events</Button>
-              </Link>
-              <span className="h-6 w-px bg-line" aria-hidden />
-              <a href="#how" className="link-underline text-[14px] text-ink-2">
-                How it works
-              </a>
-            </div>
-          </div>
-
-          {/* Decorative signature ticket */}
-          <div className="hidden justify-center md:flex" aria-hidden>
-            <div className="w-full max-w-sm rotate-3">
-              <TicketStub
-                accentStyle={accentVars('decorative-hero')}
-                eyebrow="Fri · 21 Jun · 20:00"
-                title="Late Night Jazz: The Blue Hour"
-                meta="BFlat Bar, Indiranagar · Bengaluru"
-                seats={2}
-                code="LM-7Q4K9P"
-              />
-            </div>
-          </div>
-        </Container>
-      </section>
-
-      {/* Running order */}
-      <section className="py-16 md:py-20">
-        <Container>
-          <div className="flex items-baseline justify-between gap-4 border-b border-ink pb-4">
-            <h2 className="font-display text-h2 font-medium text-ink">
-              <span className="font-mono text-[13px] tracking-[0.1em] text-ink-3">01 — </span>Now on sale
-            </h2>
-            <Link to="/events" className="link-underline inline-flex items-center gap-1.5 text-[14px] text-ink-2">
-              All events <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
-            </Link>
-          </div>
-          {isLoading ? (
-            <RunningOrderSkeleton rows={5} />
-          ) : (
-            <ol>
-              {featured.map((event, i) => (
-                <RunningOrderRow key={event.id} event={event} index={i} />
-              ))}
-            </ol>
-          )}
-        </Container>
-      </section>
-
-      {/* Highly rated */}
-      {topRated.length > 0 ? (
-        <section className="border-t border-line py-16 md:py-20">
-          <Container>
-            <div className="flex items-baseline justify-between gap-4 border-b border-ink pb-4">
-              <h2 className="font-display text-h2 font-medium text-ink">
-                <span className="font-mono text-[13px] tracking-[0.1em] text-ink-3">02 — </span>Highly rated
-              </h2>
-              <Link
-                to="/events?sort=-rating"
-                className="link-underline inline-flex items-center gap-1.5 text-[14px] text-ink-2"
-              >
-                See all <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
-              </Link>
-            </div>
-            <ol>
-              {topRated.map((event, i) => (
-                <RunningOrderRow key={event.id} event={event} index={i} />
-              ))}
-            </ol>
-          </Container>
-        </section>
-      ) : null}
-
-      {/* How it works */}
-      <section id="how" className="border-y border-line bg-paper-3/60 py-16 md:py-20">
-        <Container>
-          <h2 className="font-display text-h2 font-medium text-ink">
-            <span className="font-mono text-[13px] tracking-[0.1em] text-ink-3">03 — </span>How it works
-          </h2>
-          <div className="mt-8 grid gap-px overflow-hidden rounded-md border border-line bg-line md:grid-cols-3">
-            {STEPS.map(([num, title, body]) => (
-              <div key={num} className="bg-paper-2 p-7">
-                <p className="font-mono text-[13px] tabular-nums text-accent">{num}</p>
-                <h3 className="mt-3 font-display text-[1.4rem] font-medium leading-tight text-ink">{title}</h3>
-                <p className="mt-2 text-[14px] leading-relaxed text-ink-2">{body}</p>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      {/* Category index */}
-      <section className="py-16 md:py-20">
-        <Container>
-          <h2 className="font-display text-h2 font-medium text-ink">
-            <span className="font-mono text-[13px] tracking-[0.1em] text-ink-3">04 — </span>By category
-          </h2>
-          <div className="mt-6 flex flex-wrap items-baseline gap-x-8 gap-y-3">
-            {EVENT_CATEGORIES.map((c) => (
+      <section className="border-b border-line">
+        <Container className="py-16 md:py-24">
+          <p className="font-mono text-[12px] uppercase tracking-[0.16em] text-ink-3">Linemate · Live events in India</p>
+          <h1 className="font-wonk mt-4 max-w-[16ch] font-display text-display-xl font-medium text-ink">
+            Find your next <span className="italic text-accent">night out.</span>
+          </h1>
+          <p className="mt-5 max-w-[52ch] text-body-lg text-ink-2">
+            Gigs, talks, long dinners and late nights — discover what's on near you and book a seat in seconds.
+          </p>
+          <HeroSearch />
+          <div className="mt-5 flex flex-wrap items-center gap-2">
+            <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-ink-3">Popular:</span>
+            {POPULAR.map((c) => (
               <Link
                 key={c}
                 to={`/events?category=${encodeURIComponent(c)}`}
-                className="link-underline font-display text-[clamp(1.5rem,3vw,2.25rem)] font-medium text-ink/90 transition-colors hover:text-ink"
+                className="rounded-full border border-line bg-paper-2 px-3 py-1 text-[13px] text-ink-2 transition-colors hover:border-ink hover:text-ink"
               >
                 {c}
               </Link>
             ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* Trending */}
+      <section className="py-14 md:py-16">
+        <Container>
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <h2 className="font-display text-h2 font-medium text-ink">Trending this week</h2>
+              <p className="mt-1 text-[14px] text-ink-2">The events filling up fastest right now.</p>
+            </div>
+            <Link to="/events?sort=-trending" className="link-underline inline-flex items-center gap-1.5 text-[14px] text-ink-2">
+              See all <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
+            </Link>
+          </div>
+          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {loadingTrending
+              ? Array.from({ length: 3 }).map((_, i) => <EventCardSkeleton key={i} />)
+              : trendingEvents.slice(0, 6).map((event) => <EventCard key={event.id} event={event} />)}
+          </div>
+        </Container>
+      </section>
+
+      {/* Categories */}
+      <section className="border-y border-line bg-paper-3/40 py-14 md:py-16">
+        <Container>
+          <h2 className="font-display text-h2 font-medium text-ink">Browse by category</h2>
+          <div className="mt-6">
+            <CategoryTiles />
+          </div>
+        </Container>
+      </section>
+
+      {/* Upcoming */}
+      <section className="py-14 md:py-16">
+        <Container>
+          <div className="flex items-end justify-between gap-4">
+            <h2 className="font-display text-h2 font-medium text-ink">Happening soon</h2>
+            <Link to="/events" className="link-underline inline-flex items-center gap-1.5 text-[14px] text-ink-2">
+              All events <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
+            </Link>
+          </div>
+          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {loadingUpcoming
+              ? Array.from({ length: 4 }).map((_, i) => <EventCardSkeleton key={i} />)
+              : upcomingEvents.slice(0, 8).map((event) => <EventCard key={event.id} event={event} />)}
           </div>
         </Container>
       </section>

@@ -16,6 +16,7 @@ const schema = z.object({
   category: z.enum(EVENT_CATEGORIES),
   organizer: z.string().trim().min(2, 'Required').max(120),
   totalSeats: z.coerce.number().int('Whole number').min(1, 'At least 1').max(100000),
+  imageUrl: z.union([z.string().trim().url('Enter a valid image URL'), z.literal('')]).optional(),
 });
 type FormValues = z.infer<typeof schema>;
 
@@ -78,6 +79,14 @@ export function EventForm({ defaultValues, submitLabel, onSubmit }: EventFormPro
           <Input id="totalSeats" type="number" min={1} aria-invalid={Boolean(errors.totalSeats)} {...register('totalSeats')} />
         </Field>
       </div>
+      <Field
+        htmlFor="imageUrl"
+        label="Cover image URL"
+        error={errors.imageUrl?.message}
+        hint="Optional — paste an image link. Leave blank to use a category cover."
+      >
+        <Input id="imageUrl" type="url" placeholder="https://…" aria-invalid={Boolean(errors.imageUrl)} {...register('imageUrl')} />
+      </Field>
       <div className="flex justify-end pt-2">
         <Button type="submit" isLoading={isSubmitting}>
           {submitLabel}

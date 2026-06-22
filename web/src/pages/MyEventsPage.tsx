@@ -42,7 +42,17 @@ export function MyEventsPage() {
         ) : (
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {events.map((event) => (
-              <EventCard key={event.id} event={event} />
+              <div key={event.id} className="space-y-2">
+                <EventCard event={event} />
+                <div className="flex items-center justify-between gap-2 px-1 font-mono text-[11px] uppercase tracking-[0.06em] text-ink-3">
+                  <span className="tabular-nums">
+                    {event.viewCount} views · {event.bookingCount} booked
+                  </span>
+                  <Link to={`/events/${event.id}/edit`} className="text-ink-2 transition-colors hover:text-ink">
+                    <span className="link-underline">Edit</span>
+                  </Link>
+                </div>
+              </div>
             ))}
           </div>
         )}

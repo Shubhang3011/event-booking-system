@@ -8,7 +8,7 @@ export const listEventsQuerySchema = z.object({
   category: z.enum(EVENT_CATEGORIES).optional(),
   city: z.string().trim().max(80).optional(),
   when: z.enum(['upcoming', 'past', 'all']).default('upcoming'),
-  sort: z.enum(['date', '-date', 'seats', '-seats', 'newest', '-rating']).default('date'),
+  sort: z.enum(['date', '-date', 'seats', '-seats', 'newest', '-rating', '-trending']).default('date'),
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(50).default(12),
 });
@@ -24,6 +24,7 @@ export const createEventSchema = z.object({
   category: z.enum(EVENT_CATEGORIES),
   organizer: z.string().trim().min(2).max(120),
   totalSeats: z.coerce.number().int().min(1, 'At least 1 seat').max(100000),
+  imageUrl: z.union([z.string().trim().url('Enter a valid image URL').max(1000), z.literal('')]).optional(),
 });
 
 export const updateEventSchema = createEventSchema.partial();

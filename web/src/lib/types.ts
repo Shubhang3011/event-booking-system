@@ -36,6 +36,9 @@ export interface EventItem {
   availableSeats: number;
   ratingAverage: number;
   ratingCount: number;
+  imageUrl: string;
+  bookingCount: number;
+  viewCount: number;
   createdBy?: string | null;
   isPast: boolean;
   isSoldOut: boolean;

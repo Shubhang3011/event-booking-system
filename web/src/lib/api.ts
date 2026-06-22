@@ -69,7 +69,7 @@ export interface ListEventsParams {
   category?: EventCategory;
   city?: string;
   when?: 'upcoming' | 'past' | 'all';
-  sort?: 'date' | '-date' | 'seats' | '-seats' | 'newest' | '-rating';
+  sort?: 'date' | '-date' | 'seats' | '-seats' | 'newest' | '-rating' | '-trending';
   page?: number;
   limit?: number;
 }
@@ -83,6 +83,7 @@ export interface EventInput {
   category: EventCategory;
   organizer: string;
   totalSeats: number;
+  imageUrl?: string;
 }
 
 export const eventsApi = {
