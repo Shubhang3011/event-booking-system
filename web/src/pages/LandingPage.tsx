@@ -117,7 +117,7 @@ export function LandingPage() {
       <section className="relative isolate overflow-hidden">
         <img src={HERO_IMAGE} alt="" className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/70 to-zinc-950/40" aria-hidden />
-        <Container className="relative py-20 md:py-28">
+        <Container className="relative py-16 sm:py-20 md:py-28">
           <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[13px] font-medium text-white backdrop-blur">
             <Sparkles className="h-3.5 w-3.5" /> Live events across India
           </span>

@@ -53,7 +53,7 @@ export function MyBookingsPage() {
   ];
 
   return (
-    <Container className="py-12">
+    <Container className="py-8 sm:py-12">
       <header className="flex items-end justify-between gap-4">
         <h1 className="text-h1 font-semibold text-ink">My Tickets</h1>
         <span className="text-[12px] text-ink-3">

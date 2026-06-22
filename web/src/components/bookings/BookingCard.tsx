@@ -25,11 +25,11 @@ export function BookingCard({ booking, onCancel, cancelling = false }: BookingCa
   return (
     <div
       className={cn(
-        'flex gap-4 rounded-xl border border-line bg-paper-2 p-4 shadow-paper-1',
+        'flex gap-3 rounded-xl border border-line bg-paper-2 p-3 shadow-paper-1 sm:gap-4 sm:p-4',
         (cancelled || past) && 'opacity-80',
       )}
     >
-      <Link to={`/events/${event.id}`} className="h-20 w-28 shrink-0 overflow-hidden rounded-lg bg-paper-3">
+      <Link to={`/events/${event.id}`} className="h-20 w-24 shrink-0 overflow-hidden rounded-lg bg-paper-3 sm:w-28">
         <EventImage event={event} />
       </Link>
       <div className="flex min-w-0 flex-1 flex-col">
@@ -53,7 +53,7 @@ export function BookingCard({ booking, onCancel, cancelling = false }: BookingCa
             </Badge>
           )}
         </div>
-        <div className="mt-auto flex items-center justify-between gap-2 pt-3">
+        <div className="mt-auto flex flex-wrap items-center justify-between gap-x-3 gap-y-2 pt-3">
           <span className="text-[13px] text-ink-2">
             {booking.seats} seat{booking.seats === 1 ? '' : 's'} ·{' '}
             <span className="tabular-nums text-ink-3">{booking.bookingCode}</span>
