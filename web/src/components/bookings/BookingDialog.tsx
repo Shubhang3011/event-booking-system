@@ -9,6 +9,7 @@ import { toApiError } from '@/lib/api';
 import { dateline } from '@/lib/format';
 import type { Booking, EventItem } from '@/lib/types';
 import { useToast } from '@/providers/ToastProvider';
+import { TicketQR } from './TicketQR';
 
 interface BookingDialogProps {
   open: boolean;
@@ -56,11 +57,14 @@ export function BookingDialog({ open, onClose, event, seats }: BookingDialogProp
           </div>
           <h3 className="mt-3 text-lg font-semibold text-ink">Booking confirmed</h3>
           <p className="mt-1 text-[14px] text-ink-2">{event.title}</p>
+          <div className="mt-5 flex justify-center">
+            <TicketQR booking={booking} />
+          </div>
+          <p className="mt-3 text-[13px] text-ink-3">Show this code at the entrance to check in.</p>
         </div>
         <div className="mt-4 space-y-2 rounded-lg border border-line bg-paper-3 p-4">
           <Row label="Date" value={dateline(event.date)} />
           <Row label="Seats" value={String(booking.seats)} />
-          <Row label="Booking code" value={booking.bookingCode} />
         </div>
         <div className="mt-5 flex items-center justify-end gap-3">
           <Button variant="ghost" onClick={handleClose}>
