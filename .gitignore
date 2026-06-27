@@ -44,3 +44,6 @@ Thumbs.db
 *.pem
 *.pdf
 
+
+# Local interview notes — never committed
+INTERVIEW_PREP.md
